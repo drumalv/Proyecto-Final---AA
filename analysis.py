@@ -1,3 +1,5 @@
+import json
+
 import pandas as pd
 import numpy as np 
 
@@ -166,35 +168,44 @@ print("Despues: {}".format(x_train_prep.shape))
 pipe = Pipeline(steps=preproc+[('estimator', LogisticRegression())])
 
 # Añadimos los estimadores que vamos a utilizar y los parametros que vamos a estudiar:
-#       si clase de funcion lineal o cuadrática
-#       la potencia de la penalización l2 "C"    
+  
 params_grid = [ {
                 'estimator':[LogisticRegression(max_iter=500)],
-                'estimator__solver':['lbfgs'],
-                'estimator__C': np.logspace(-4, 4, 3)
-                #'poly__degree': [1,2]
+                'estimator__solver':['saga'],
+                'estimator__C': np.logspace(-4, 4, 3),
+                'estimator__penalty': ['l1'],
+                'estimator__tol': [1e-3, 1e-4]
                 },
                 {
-                'estimator': [Perceptron(random_state = SEED)]
-                #'poly__degree': [1,2]
+                'estimator': [Perceptron(random_state = SEED)],
+                'estimator__alpha':[1.0,1e-3, 1e-4],
+                'estimator__max_iter':[2000],
+                'estimator__tol': [1e-3, 1e-4],
+                'estimator__shuffle': [True]
                 },
                 {
-                'estimator': [RandomForestClassifier(random_state = SEED)]
-                #'poly__degree': [1,2]
+                'estimator': [RandomForestClassifier(random_state = SEED)],
+                'estimator__criterion': ['gini','entropy'],
+                'estimator__max_features': ['sqrt'],
+                'estimator__bootstrap':['True']
                 },
                 {
-                'estimator': [MLPClassifier(random_state = SEED)]
-                #'poly__degree': [1,2]
+                'estimator': [MLPClassifier(random_state = SEED)],
+                'estimator__activation': ['logistic', 'tanh', 'relu'],
+                'estimator__solver': ['lbfgs'],
+                'estimator__alpha': [1.0,1e-3, 1e-4],
+                'estimator__max_fun': [20000]
+                },
+                {
+                'estimator': [SVC()],
+                'estimator__C': np.logspace(-4, 4, 3),
+                'estimator__kernel': ['rbf'],
+                'estimator__gamma': ['scale']
                 }
-                #{
-                #'estimator': [SVC()],
-                #'estimator__C': np.logspace(-4, 4, 3)
-                #'poly__degree': [1,2]
-                #}
                # {'estimator':[Any_other_estimator_you_want],
                #  'estimator__valid_param_of_your_estimator':[valid_values]
 
-              ]
+]
 
 print("CON PREPROCESADO Y REGULARIZACION: \n")
 
@@ -209,3 +220,8 @@ print("Precisión en training:", 100.0 * best_clf.score(train_x, train_y))
 print("Precisión en test: ",100.0 * best_clf.score(test_x, test_y))
 
 print(results)
+
+with open("results.json", "w") as f:
+    json.dump(best_clf.cv_results_, f, default=str)
+
+
