@@ -1,11 +1,12 @@
 \documentclass[a4paper,11pt]{article}
-\usepackage[american]{babel}
+\usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{booktabs}  
 \usepackage{graphicx} 
 \usepackage{listings}
 \usepackage{amsmath,amsthm,amssymb}
+
 \lstset{%
 backgroundcolor=\color{cyan!10},
 basicstyle=\ttfamily,
@@ -13,6 +14,7 @@ numbers=left,numberstyle=\scriptsize
 }
 \setlength{\parindent}{0cm}
 \usepackage[wby]{callouts}
+\usepackage{hyperref}
 
 \title{Memoria Proyecto Final}
 \author{Álvaro Beltrán y Yábir García}
@@ -32,21 +34,150 @@ numbers=left,numberstyle=\scriptsize
 
 \newpage
 
-\section{Definición del problema a resolver y enfoque elegido.}
+\section{Definición del problema a resolver y enfoque elegido}
+
+Para nuestro proyecto nos hemos decantado por trabajar con el conjunto de datos
+\textit{Adult Census Income} recogido por Ronny Kohavi y Berry Becker. 
+
+Se nos presenta un conjunto muestras para las que se han recogido distintos
+parámetros que pueden afectar a la cantidad de dinero que se ingresa. Las
+variables, las cuales se analizarán posteriormente, abarcan desde la ] edad
+hasta el país de origen y el problema consiste en determinar cuando una muestra
+va superar las 50000 unidades monetarias de ingresos y cuando se va a mantener
+por debajo.
+
+Estamos ante un problema de aprendizaje supervisado en el ámbito de la
+clasificación binaria. En nuestro caso los elementos que intervienen en el
+aprendizaje son 
+
+\begin{itemize}
+    \item $X$: Conjunto de datos relativos a una persona que pueden tener
+    repercusión en el dinero que gane. Se trata de un vector que mezcla
+    variables categóricas con variables reales.
+    \item $y$: Es un valor en el conjunto $\{0,1\}$ que nos indica si los
+    ingresos superan las 50000 unidades monetarias o no.
+    \item $f$: Función que nos relaciona el conjunto $X$ con $y$ de manera que a
+    cada muestra le asigna su categoria de ingresos.
+\end{itemize}
+
+En este problema es dicha función $f$ la que queremos aproximar. Para ello vamos
+a basar nuestro estudio en aplicar el conocimiento adquirido durante la
+asignatura utilizando métodos lineales y no lineales.
+
+\section{Obtención de los datos}
+
+Para la obtención de los datos hemos utilizado el repositorio público de
+\textit{UCI}, más concretamente la url
+\href{https://archive.ics.uci.edu/ml/machine-learning-databases/adult/}{https://archive.ics.uci.edu/ml/machine-learning-databases/adult/}.
+Podemos apreciar como hay distintos archivos entre los que se encuentran los
+datos y una descripción. 
+
+Los datos aparecen separados en dos archivos distintos, uno para training y otro
+para test. Descargamos ambos ficheros (\textit{adult.data}, \textit{adult.test})
+y en nuestro trabajo hemos decidido combinarlos para realizar una separación
+propia.
 
 \section{Argumentos a favor de la elección de los modelos.}
 
-En cuanto a los modelos lineales elegidos nos hemos decantado por Regresión Logística y Perceptron, debido a que son dos modelos que hemos estudiado en clase para ejemplos de clasificación binaria, como es nuestro caso. \\
+En cuanto a los modelos lineales elegidos nos hemos decantado por Regresión
+Logística y Perceptron, debido a que son dos modelos que hemos estudiado en
+clase para ejemplos de clasificación binaria, como es nuestro caso. \\
 
-Además parece interesante probar con el Perceptron puesto que también vamos a usar el perceptron multicapa (MLP). Y puesto que Regresión Logística ha dado tan buenos resultados en las prácticas de esta asignatura y suele funcionar muy bien en clasificación parece indispensable probar este modelo.
+Además parece interesante probar con el Perceptron puesto que también vamos a
+usar el perceptron multicapa (MLP). Y puesto que Regresión Logística ha dado tan
+buenos resultados en las prácticas de esta asignatura y suele funcionar muy bien
+en clasificación parece indispensable probar este modelo.
 
-\section{}
 
-\section{Valoración del interés de la variables para el problema y selección de un subconjunto.}
+\section{Preprocesado de los datos}
 
-En principio, tras leer la descripción de los atributos estudiados. Solo vemos dos variables que no aportan información al problema. La primera es "Education-num" que es una representación numérica del atributo education, no aporta nada pues hemos tomado la decisión de dividir cada variable categórica en una serie de variables donde asignamos 1 si es de un determinado tipo del dominio de la variable o 0 si no es de ese tipo. La segunda variable es "fnlwgt" que determina el número de personas representadas con esa instancia, entendemos que esa variable no aporta información de fuera de la muestra y por lo tanto no es interesante.
+En primer lugar vamos a analizar el típo de variables con los que contamos. Este
+análisis lo recogemos en la siguiente tabla
 
-\section{}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Variable & Tipo de variable & Número de categorías\\ \hline
+    age & continua & - \\ \hline
+    workclass & categórica & 8 \\ \hline
+    fnlwgt & continua & - \\ \hline
+    education & categórica & 16 \\ \hline
+    education-num & continua & - \\ \hline
+    marital-status & categórica & 7 \\ \hline
+    occupation & categórica & 14 \\ \hline
+    relationship & categórica & 6 \\ \hline
+    race & categórica & 5 \\ \hline
+    sex & categórica & 2 \\ \hline
+    capital-gain & continua & - \\ \hline
+    capital-loss & continua & - \\ \hline
+    hours-per-week & continua & - \\ \hline
+    native-country & categórica & 41 \\ \hline
+\end{tabular}
+\caption{Variables estudiadas en las muestras, su tipo y la cantidad de categorías si procede.}
+\end{table}
+
+\subsection{Codificación de las variables}
+
+Tenemos un conjunto de variables en las que se combinan tipos continuos y
+categóricos por lo que nos va a resultar necesario convertir los datos
+categóricos a valores reales. Para ello hemos optado por realizar para cada
+variable de tipo categórico un vector de ceros y unos que representa con un uno
+la pertenencia a una categoría concreta. Por ejemeplo en el caso de la variable
+\textit{sex} que cuenta con dos categorías, $(1,0)$ representaría la pertenencia
+al sexo femenino y $(0,1)$ al sexo masculino. En esta codificación de los datos
+no es posible obtener un vector con más de un uno ya que en nuestros datos no se
+pertenece a dos categorías de manera simultanea.
+
+En nuestro caso nos hemos decantado por utilizar el método de pandas
+\textit{get\_dummies}, que nos proporciona este comportamiento incluyendo la
+codificación como variables en nuestro \textit{dataframe} de trabajo.
+
+\subsection{Normalización de las variables}
+
+Los rangos en los que se mueven las variables son muy dispares y normalmente con
+valores muy distantes por lo que hemos visto conveniente ralizar una
+normalización de las variables continuas. Para ello hemos aplicado
+\textit{StandardScaler} de sklearn de manera que transforma la variables
+dejandolas con medio 0 y varianza 1. De esta forma  todas las variables se
+encuentran centradas entorno al mismo valor y en un rango similar. 
+
+Esto es un paso muy importante ya que afecta directamente al funcionamiento 
+de los algoritmos que se van a desarrollar.
+
+\subsection{Conjunto de training y test}
+
+En los datos extraidos se obitienen dos conjuntos de datos, uno pensado para
+training y otro para test. Se nos indica además que en cada uno de estos
+conjuntos encontramos un $75\%$ de muestras clasificadas con ingresos inferiores
+a las 50000 u.m. y el $25\%$ con ingresos superiores a dicho valor. 
+
+Hemos considerado conveniente realizar una separación de los datos en la que las
+clases esten balanceadas ya que es un aspecto importante en los algoritmos de
+clasificación y que puede afectar a la misma. 
+
+Respecto a la separación de los datos, hemos decidido realizar una separación
+$80-20$ para training y test respectivamente.
+
+No hemos realizado una separación para datos de validación ya que nos hemos
+decantado, como se describe en secciones posteriores, por un sistema de elección
+de hiperparámetros basado en validación cruzada.
+
+\section{Regularización}
+
+En el caso del modelo lineal nos hemos decantado por utilizar regularización
+basada en la norma 1, \textit{l1}, ya que hemos encontrado que no existe una
+alta correlación lineal entre las variables y, con la introducción de las
+variables \textit{dummies}, creemos que es la mejor elección. 
+
+Para el algoritmo de random forest no se utiliza de manera implicita ningún
+factor de regularización.
+
+En el caso de SVC, el único parámetro que se puede moficiar es el coeficiente de
+regularización, para el cual se ha aplicado un criterio de búsqueda en la
+elección de hiperparámetros, pero no se puede elegir la métrica con la que se
+regulariza.
+
 
 \section{Justificación de la función de pérdida usada.}
 
@@ -72,6 +203,10 @@ Para los modelos estudiados anteriormente hemos seleccionado una serie de parám
 \item \textbf{Ramdom Forest}. Vamos a usar bootstrap porque es capaz de medir la incertidumbre de nuestro modelo mediante una técnica de reelección de muestras. Para determinar las máximas características del árbol vamos a usar la raíz cuadrada por que hay evidencias empíricas de que es el mejor. Hemos hecho inferencia sobre el criterio de selección, sobre si elegir entropy o gini. 
 
 \end{itemize}
+
+\section{Conclusiones}
+
+Aquí decir que lineal good y que no hay nada que envidiar
 
 
 \end{document}
