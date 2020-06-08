@@ -1,0 +1,3 @@
+\babel@toc {american}{}
+\contentsline {section}{\numberline {1}Definición del problema a resolver y enfoque elegido.}{3}%
+\contentsline {section}{\numberline {2}Argumentos a favor de la elección de los modelos.}{3}%

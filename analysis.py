@@ -171,7 +171,7 @@ pipe = Pipeline(steps=preproc+[('estimator', LogisticRegression())])
   
 params_grid = [ {
                 'estimator':[LogisticRegression(max_iter=500)],
-                'estimator__solver':['saga'],
+                'estimator__solver':['lbfgs'],
                 'estimator__C': np.logspace(-4, 4, 3),
                 'estimator__penalty': ['l1'],
                 'estimator__tol': [1e-3, 1e-4]
