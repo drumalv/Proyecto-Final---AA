@@ -146,8 +146,8 @@ cmap = sns.diverging_palette(220, 10, as_cmap=True)
 sns.heatmap(correlation_matrix, cmap=cmap, vmax=.3, center=0,
             square=True, linewidths=.5, cbar_kws={"shrink": .5})
 
-#plt.show()
-
+plt.show()
+"""
 preproc=[
             ("var", VarianceThreshold(0.01)),   
             ("standardize", StandardScaler()),      
@@ -225,3 +225,4 @@ with open("results.json", "w") as f:
     json.dump(best_clf.cv_results_, f, default=str)
 
 
+"""
