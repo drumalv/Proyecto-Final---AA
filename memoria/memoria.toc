@@ -1,9 +1,14 @@
-\babel@toc {american}{}
-\contentsline {section}{\numberline {1}Definición del problema a resolver y enfoque elegido.}{3}%
-\contentsline {section}{\numberline {2}Argumentos a favor de la elección de los modelos.}{3}%
-\contentsline {section}{\numberline {3}}{3}%
-\contentsline {section}{\numberline {4}Valoración del interés de la variables para el problema y selección de un subconjunto.}{3}%
-\contentsline {section}{\numberline {5}}{3}%
-\contentsline {section}{\numberline {6}Justificación de la función de pérdida usada.}{3}%
-\contentsline {section}{\numberline {7}}{4}%
-\contentsline {section}{\numberline {8}Estimación de los hiperparámetros.}{4}%
+\babel@toc {spanish}{}
+\contentsline {section}{\numberline {1}Definición del problema a resolver y enfoque elegido}{3}{section.1}%
+\contentsline {section}{\numberline {2}Obtención de los datos}{3}{section.2}%
+\contentsline {section}{\numberline {3}Argumentos a favor de la elección de los modelos.}{3}{section.3}%
+\contentsline {section}{\numberline {4}Preprocesado de los datos}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Codificación de las variables}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Valoración del interes de las variables y selección de un subconjunto}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Normalización de las variables}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Valores perdidos}{5}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Conjunto de training y test}{6}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Regularización}{6}{section.5}%
+\contentsline {section}{\numberline {6}Justificación de la función de pérdida usada.}{6}{section.6}%
+\contentsline {section}{\numberline {7}Estimación de los hiperparámetros.}{7}{section.7}%
+\contentsline {section}{\numberline {8}Conclusiones}{7}{section.8}%
