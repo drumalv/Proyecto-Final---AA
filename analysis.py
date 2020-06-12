@@ -78,15 +78,15 @@ dataSet.dropna(thresh=14, inplace=True, axis=0)
 
 print(dataSet.isnull().sum(axis=1).sort_values(ascending = False))
 print(dataSet.isnull().sum(axis=0).sort_values(ascending = False).head(30))
-""""
+
 s = dataSet["native-country"].value_counts(normalize=True)
 missing = dataSet["native-country"].isnull()
 dataSet.loc[missing,"native-country"] = np.random.choice(s.index, size=len(dataSet[missing]),p=s.values)
 
 s = dataSet["occupation"].value_counts(normalize=True)
 missing = dataSet["occupation"].isnull()
-dataSet.loc[missing,"occupation"] = np.random.choice(s.index, size=len(dataSet[missing]),p=s.values)
-"""
+dataSet.loc[missing,"native-country"] = np.random.choice(s.index, size=len(dataSet[missing]),p=s.values)
+
 print(dataSet.isnull().sum(axis=0).sort_values(ascending = False).head(30))
 
 

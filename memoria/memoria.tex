@@ -13,7 +13,7 @@ basicstyle=\ttfamily,
 numbers=left,numberstyle=\scriptsize
 }
 \setlength{\parindent}{0cm}
-\usepackage[wby]{callouts}
+%\usepackage[wby]{callouts}
 \usepackage{hyperref}
 
 \title{Memoria Proyecto Final}
@@ -96,7 +96,7 @@ Perceptron Multicapa.\\
 
 SVC.\\
 
-\section{Preprocesado de los datos}
+\section{Exploración y preprocesado de los datos}
 
 En primer lugar vamos a analizar el típo de variables con los que contamos. Este
 análisis lo recogemos en la siguiente tabla
@@ -124,6 +124,38 @@ análisis lo recogemos en la siguiente tabla
 \caption{Variables estudiadas en las muestras, su tipo y la cantidad de categorías si procede.}
 \end{table}
 
+Respecto al total del conjunto de datos nos encontramos que disponemos de
+48843 muestras contando las que tenemos en los ficheros \textit{adult.data}
+y \text{adult.test}. 
+
+De estas 48843 una es una irregularidad en el archivo \textit{adult.test} que contiene 
+una linea no válida.
+
+Los datos contienen 14 columnas que se corresponden a 13 características mas 
+la etiqueta que se predice. De entre las muestras las características que mas datos
+perdidos tienen son 
+
+\begin{enumerate}
+    \item occupation con 2810 valoers perdidos
+    \item workclass con 2800 valores perdidos 
+    \item native-country con 858 valores perdidos 
+\end{enumerate}
+
+el resto de características solo tienen un valor perdido que se corresponde 
+con la linea erronea en el archivo de \textit{adult.test}.
+
+En lo que respecta al número de clases aproximadamente un $75\%$ se corresponden 
+con la etiqueta $<=50K$ y un $25\%$ con la etiqueta $>50K$ (etiquetas que hemos
+codificado como $0$ y $1$ respectivamente). En el siguiente gráfico se puede apreciar 
+dicha diferencia en el número de muestras de cada clase 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/proportion}
+    \caption{Proporcion de muestras en cada clase}
+\end{figure}
+
+
 \subsection{Codificación de las variables}
 
 Tenemos un conjunto de variables en las que se combinan tipos continuos y
@@ -144,7 +176,7 @@ codificación como variables en nuestro \textit{dataframe} de trabajo.
 
 En principio, tras leer la descripción de los atributos estudiados. Solo vemos
 dos variables que no aportan información al problema. La primera es
-"Education-num" que es una representación numérica del atributo education, no
+\textit{Education-num} que es una representación numérica del atributo education, no
 aporta nada pues hemos tomado la decisión de dividir cada variable categórica en
 una serie de variables donde asignamos 1 si es de un determinado tipo del
 dominio de la variable o 0 si no es de ese tipo. La segunda variable es "fnlwgt"
@@ -166,7 +198,14 @@ de los algoritmos que se van a desarrollar.
 
 \subsection{Valores perdidos}
 
-En cuanto a los valores perdidos hemos seguido las directrices propuestas en el enunciado, hemos eliminado las instancias cuyos valores perdidos superaran el 10$\%$ (2 atributos con valores perdidos). Una vez eliminadas estas instancias hemos rellenado los valores perdidos restantes con la multinomial asignando a cada posible valor del domino del atributo una probabilidad dependiendo de la cantidad de veces que aparecen en las instancias. Para ello, hemos usado la funcion choice de la libreria random, determinando el dominio y las probabilidades con las que aparecen cada objeto del dominio.
+En cuanto a los valores perdidos hemos seguido las directrices propuestas en el
+enunciado, hemos eliminado las instancias cuyos valores perdidos superaran el
+10$\%$ (2 atributos con valores perdidos). Una vez eliminadas estas instancias
+hemos rellenado los valores perdidos restantes con la multinomial asignando a
+cada posible valor del domino del atributo una probabilidad dependiendo de la
+cantidad de veces que aparecen en las instancias. Para ello, hemos usado la
+funcion choice de la libreria random, determinando el dominio y las
+probabilidades con las que aparecen cada objeto del dominio.
 
 
 
@@ -210,10 +249,13 @@ En un principio pensamos en usar exactitud (Accuracy), pero esta métrica da no 
 \begin{align*}
 \frac{TP}{TP+FP}
 \end{align*}
-\textbf{(revisar esto de abajo)}\\
-Además, con esta métrica conseguimos estudiar el porcentaje de casos positivos bien clasificados, asumiendo que en los casos negativos pasa lo mismo.
 
 
+Si llamamos la clase negativa a la clase mayoritaria, recibir menos de 50K u.m y
+positiva a la clase minoritaria, recibir mas de 50K u.m. Con la métrica
+(\textit{precission}) \cite{metrics} nos concentramos mas en la clase positiva y en 
+la probabilidad de de detectar la clase positiva y no tanto en distinguir la 
+clase negativa de la positiva.
 
 \section{Estimación de los hiperparámetros.}
 
@@ -224,24 +266,151 @@ parámetros y vamos a hacer inferencia sobre otros:
 
 \begin{itemize}
 
-\item \textbf{Regresión Logística}. Hemos decidido usar el solver lbfgs que es newton pero con mejoras en memoria para reducir el tiempo, vamos a usar este porque newton adapta la tasa de aprendizaje según le convenga y por tanto es más eficaz. Usamos penalización L1 ya que usamos Lasso. Y hacemos inferencia sobre los parámetros C y tol. El parámetro C es el coeficiente que acompaña a la penalización y tol es la tolerancia usada en el modelo.
+\item \textbf{Regresión Logística}. Hemos decidido usar el solver lbfgs que es
+newton pero con mejoras en memoria para reducir el tiempo, vamos a usar este
+porque newton adapta la tasa de aprendizaje según le convenga y por tanto es más
+eficaz. Usamos penalización L1 ya que usamos Lasso. Y hacemos inferencia sobre
+los parámetros C y tol. El parámetro C es el coeficiente que acompaña a la
+penalización y tol es la tolerancia usada en el modelo.
 
-\item \textbf{Perceptron}. Hemos prefijado la máximas iteraciones a 2000 por que probando con menos no acababa y hemos decidido que baraje los datos en cada iteración del perceptron como hemos visto en teoría. Hacemos inferencia sobre los parámetros alpha y tol. El parámetro alpha es el coeficiente que acompaña a la penalización (elegida la que viene por defecto) y tol es la tolerancia usada en el modelo.
+\item \textbf{Perceptron}. Hemos prefijado la máximas iteraciones a 2000 por que
+probando con menos no acababa y hemos decidido que baraje los datos en cada
+iteración del perceptron como hemos visto en teoría. Hacemos inferencia sobre
+los parámetros alpha y tol. El parámetro alpha es el coeficiente que acompaña a
+la penalización (elegida la que viene por defecto) y tol es la tolerancia usada
+en el modelo.
 
-\item \textbf{Ramdom Forest}. Vamos a usar bootstrap porque es capaz de medir la incertidumbre de nuestro modelo mediante una técnica de reelección de muestras. Para determinar las máximas características del árbol vamos a usar la raíz cuadrada por que hay evidencias empíricas de que es el mejor. Hemos hecho inferencia sobre el criterio de selección, sobre si elegir entropy o gini. 
+\item \textbf{Ramdom Forest}. Vamos a usar bootstrap porque es capaz de medir la
+incertidumbre de nuestro modelo mediante una técnica de reelección de muestras.
+Para determinar las máximas características del árbol vamos a usar la raíz
+cuadrada por que hay evidencias empíricas de que es el mejor. Hemos hecho
+inferencia sobre el criterio de selección, sobre si elegir entropy o gini. 
 
-\item \textbf{MLPClasiffier} (Perceptron Multicapa).Hemos decidido usar el solver lbfgs que es newton pero con mejoras en memoria para reducir el tiempo, al igual que hicimos en Regresión Logística. También hemos fijado las iteraciones máximas a 20000 por que si no, no conseguía converger. Además, hacemos inferencia sobre los parámetros alpha (ya explicado antes) y función de activación. Para la función de activación damos tres opciones, 'logistic', 'tanh', 'relu': $ \frac{1}{1 + exp(-x)} , tanh(x), max(0, x)$ respectivamente.
+\item \textbf{MLPClasiffier} (Perceptron Multicapa).Hemos decidido usar el
+solver lbfgs que es newton pero con mejoras en memoria para reducir el tiempo,
+al igual que hicimos en Regresión Logística. También hemos fijado las
+iteraciones máximas a 20000 por que si no, no conseguía converger. Además,
+hacemos inferencia sobre los parámetros alpha (ya explicado antes) y función de
+activación. Para la función de activación damos tres opciones, 'logistic',
+'tanh', 'relu': $ \frac{1}{1 + exp(-x)} , tanh(x), max(0, x)$ respectivamente.
 
-\item \textbf{SVC}. Para este modelo hemos fijado los parámetros kernel y gamma a rbf y scale respectivamente. Elegimos rbf por que es un kernel no lineal que no añade demasiada complejidad y \textbf{ scale por que }. Y hacemos inferencia sobre el parámetro C que ya hemos explicado en Regresión logística.
+\item \textbf{SVC}. Para este modelo hemos fijado los parámetros kernel y gamma
+a rbf y scale respectivamente. Elegimos rbf por que es un kernel no lineal que
+no añade demasiada complejidad y \textbf{ scale por que }. Y hacemos inferencia
+sobre el parámetro C que ya hemos explicado en Regresión logística.
 
 \end{itemize}
+
+\section{Resultados obtenidos}
+
+\subsection{Regresión Logística}
+
+En el caso de la regresión logistica los mejores parámetros que se han obtenido 
+han sido:
+
+\begin{itemize}
+    \item Coeficiente de regularización: $1000000.0$
+    \item Penalty: $l2$
+    \item Solver: \textit{lbfgs}
+    \item Tolerance: $0.001$
+\end{itemize}
+
+Los resultados que se han obtenido han sido los siguientes:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
+ Regresión Logística   & 71.9281 & 71.0873 \\ \hline
+\end{tabular}
+\caption{Resultados para regresión logistica con los mejores parámetros}
+\end{table}
+
+\subsection{Perceptron}
+
+\begin{itemize}
+    \item Coeficiente de regularización: $1000000.0$
+    \item Penalty: $l2$
+    \item Solver: \textit{lbfgs}
+    \item Tolerance: $0.001$
+\end{itemize}
+
+Los resultados que se han obtenido han sido los siguientes:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
+Perceptron & 53.8586 & 53.4161 \\ \hline
+\end{tabular}
+\caption{Resultados para perceptron con los mejores parámetros }
+\end{table}
+
+\subsection{Random Forest}
+
+\begin{itemize}
+    \item Bootstrap: \textit{True}
+    \item Criterio: \textit{gini}
+    \item max\_fatures: \textit{sqrt}
+    \item min\_samples\_split: $5$
+\end{itemize}
+
+Los resultados que se han obtenido han sido los siguientes:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
+Random Forest   & 89.9642 & 70.9722 \\ \hline
+\end{tabular}
+\caption{Resultados para random forest con los mejores parámetros}
+\end{table}
+
+\subsection{Multilayer Perceptron}
+
+\begin{itemize}
+    \item Activation: \textit{logistic}
+    \item Alpha: \textit{5}
+    \item max\_fun: 20000
+    \item solver: \textit{lbfgs}
+\end{itemize}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
+    MLP   & 73.8746 & 73.0701 \\ \hline
+    \end{tabular}
+    \caption{Resultados para MLP con los mejores parámetros}
+\end{table}
+
+\subsection{Recopilación de los resultados}
+
+Procedemos a recuperar los resultados en una única tabla
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
+    Regresión Logística   & 71.9281 & 71.0873 \\ \hline
+    Perceptron & 53.8586 & 53.4161 \\ \hline
+    Random Forest   & 89.9642 & 70.9722 \\ \hline
+    MLP   & 73.8746 & 73.0701 \\ \hline
+    \end{tabular}
+    \caption{Resultados con los mejores parámetros}
+\end{table}
 
 \section{Conclusiones}
 
 Aquí decir que lineal good y que no hay nada que envidiar
 
 %comparación entre modelos lineales y no lineales
-%los resultados
+%los resultados 
 %las gráficas 
 %confusion matrix
 %ideonidad de los modelos

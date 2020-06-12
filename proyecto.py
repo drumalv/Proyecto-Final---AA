@@ -172,3 +172,55 @@ preproc = [
     ("poly",PolynomialFeatures(1)), 
     ("var2", VarianceThreshold(0.1)),   
 ]
+
+# Modelo lineal
+
+# Modelo lineal
+
+pipe_lineal = Pipeline(steps=preproc+[('estimator', LogisticRegression())])
+params_lineal = {
+    'estimator':[LogisticRegression(max_iter=500)],
+    'estimator__solver':['lbfgs'],
+    'estimator__C': np.logspace(-6, 6, 3),
+    'estimator__penalty': ['l2'],
+    'estimator__tol': [1e-3, 1e-4]
+}
+best_clf_lin = GridSearchCV(pipe_lineal, params_lineal, scoring = 'precision',cv = 5, n_jobs = -1, verbose=1)
+best_clf_lin.fit(train_x, train_y)
+
+print("Precisión en training para Regresión Logística:", 100.0 * best_clf_lin.score(train_x, train_y))
+print("Precisión en test para Regresión Logística:", 100.0 * best_clf_lin.score(test_x, test_y))
+
+
+
+# Random Forest
+pipe_lineal = Pipeline(steps=preproc+[('estimator', RandomForestClassifier(random_state = SEED))])
+params_rf = {
+    'estimator':[RandomForestClassifier(random_state = SEED)],
+    'estimator__criterion': ['gini','entropy'],
+    'estimator__max_features': ['sqrt'],
+    'estimator__bootstrap':['True'], s
+    'estimator__min_samples_split': [2,3,4,5]
+}
+best_clf_random = GridSearchCV(pipe_lineal, params_rf, scoring = 'precision',cv = 5, n_jobs = -1, verbose=1)
+best_clf_random.fit(train_x, train_y)
+
+print("Precisión en training para Random Forest:", 100.0 * best_clf_random.score(train_x, train_y))
+print("Precisión en test para Random Forest:", 100.0 * best_clf_random.score(test_x, test_y))
+
+# Perceptron
+
+# Perceptron
+pipe_perceptron = Pipeline(steps=preproc+[('estimator', Perceptron(random_state = SEED))])
+params_perceptron = {
+    'estimator':[Perceptron(random_state = SEED)],
+    'estimator__alpha':[1.0, 1e-2, 1e-3, 1e-4, 2, 5],
+    'estimator__max_iter':[2000],
+    'estimator__tol': np.logspace(-6, 1, 3),
+    'estimator__shuffle': [True]
+}
+best_clf_perceptron = GridSearchCV(pipe_perceptron, params_perceptron, scoring = 'precision',cv = 5, n_jobs = -1, verbose=1)
+best_clf_perceptron.fit(train_x, train_y)
+
+print("Precisión en training para Perceptron:", 100.0 * best_clf_perceptron.score(train_x, train_y))
+print("Precisión en test para Perceptron:", 100.0 * best_clf_perceptron.score(test_x, test_y))
