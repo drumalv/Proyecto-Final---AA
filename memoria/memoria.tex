@@ -86,10 +86,15 @@ clase para ejemplos de clasificación binaria, como es nuestro caso. \\
 Además parece interesante probar con el Perceptron puesto que también vamos a
 usar el perceptron multicapa (MLP). Y puesto que Regresión Logística ha dado tan
 buenos resultados en las prácticas de esta asignatura y suele funcionar muy bien
-en clasificación parece indispensable probar este modelo.
+en clasificación parece indispensable probar este modelo.\\
 
-% añadir modelos no lineales
+De los modelos no lineales propuestos hemos elegido Perceptron Multicapa, Random Forest y SVD.\\
 
+Vamos a usar Ramdom Forest por que suele ser bueno para clasificación, a parte de que es poco sensible a cambios en el conjunto de train (vamos a usar validación cruzada). Además, de los algoritmos actuales ninguno le supera en precisión y nuestros datos no están correlados factor que mejora su rendimiento.\\
+
+Perceptron Multicapa.\\
+
+SVC.\\
 
 \section{Preprocesado de los datos}
 
@@ -150,7 +155,7 @@ es interesante.
 \subsection{Normalización de las variables}
 
 Los rangos en los que se mueven las variables son muy dispares y normalmente con
-valores muy distantes por lo que hemos visto conveniente ralizar una
+valores muy distantes por lo que hemos visto conveniente realizar una
 normalización de las variables continuas. Para ello hemos aplicado
 \textit{StandardScaler} de sklearn de manera que transforma la variables
 dejandolas con medio 0 y varianza 1. De esta forma  todas las variables se
@@ -161,7 +166,7 @@ de los algoritmos que se van a desarrollar.
 
 \subsection{Valores perdidos}
 
-%rellenar valores perdidos
+En cuanto a los valores perdidos hemos seguido las directrices propuestas en el enunciado, hemos eliminado las instancias cuyos valores perdidos superaran el 10$\%$ (2 atributos con valores perdidos). Una vez eliminadas estas instancias hemos rellenado los valores perdidos restantes con la multinomial asignando a cada posible valor del domino del atributo una probabilidad dependiendo de la cantidad de veces que aparecen en las instancias. Para ello, hemos usado la funcion choice de la libreria random, determinando el dominio y las probabilidades con las que aparecen cada objeto del dominio.
 
 
 
@@ -201,16 +206,14 @@ regulariza.
 
 \section{Justificación de la función de pérdida usada.}
 
-%añadir cosas
-
-Para este problema hemos elegido exactitud (Accuracy) por que estamos buscando
-como objetivo no equivocarnos en la clasificación. 
+En un principio pensamos en usar exactitud (Accuracy), pero esta métrica da no funciona bien cuando las clases están desbalanceadas como es en este caso. Así que, es muy fácil acertar diciendo que dicha predicción está en la clase más probable. Para problemas con clases desbalanceadas es mucho mejor usar precisión. Esta métrica da una mejor idea de la calidad del modelo. 
 \begin{align*}
-\frac{TP+TN}{TP+TN+FP+FN}
+\frac{TP}{TP+FP}
 \end{align*}
+\textbf{(revisar esto de abajo)}\\
+Además, con esta métrica conseguimos estudiar el porcentaje de casos positivos bien clasificados, asumiendo que en los casos negativos pasa lo mismo.
 
-Además, como se ve en la fórmula es muy intuitivo y simple, factor que nos
-ayudará a la hora interpretar los resultados.
+
 
 \section{Estimación de los hiperparámetros.}
 
@@ -221,25 +224,15 @@ parámetros y vamos a hacer inferencia sobre otros:
 
 \begin{itemize}
 
-\item \textbf{Regresión Logística}. Hemos decidido usar el solver lbfgs que es
-newton pero con mejoras en memoria para reducir el tiempo, vamos a usar este
-porque newton adapta la tasa de aprendizaje según le convenga y por tanto es más
-eficaz. Usamos penalización L1 ya que usamos Lasso. Y hacemos inferencia sobre
-los parámetros C y tol. El parámetro C es el coeficiente que acompaña a la
-penalización y tol es la tolerancia usada en el modelo.
+\item \textbf{Regresión Logística}. Hemos decidido usar el solver lbfgs que es newton pero con mejoras en memoria para reducir el tiempo, vamos a usar este porque newton adapta la tasa de aprendizaje según le convenga y por tanto es más eficaz. Usamos penalización L1 ya que usamos Lasso. Y hacemos inferencia sobre los parámetros C y tol. El parámetro C es el coeficiente que acompaña a la penalización y tol es la tolerancia usada en el modelo.
 
-\item \textbf{Perceptron}. Hemos prefijado la máximas iteraciones a 2000 por que
-probando con menos no acababa y hemos decidido que baraje los datos en cada
-iteración del perceptron como hemos visto en teoría. Hacemos inferencia sobre
-los parámetros alpha y tol. El parámetro alpha es el coeficiente que acompaña a
-la penalización (elegida la que viene por defecto) y tol es la tolerancia usada
-en el modelo.
+\item \textbf{Perceptron}. Hemos prefijado la máximas iteraciones a 2000 por que probando con menos no acababa y hemos decidido que baraje los datos en cada iteración del perceptron como hemos visto en teoría. Hacemos inferencia sobre los parámetros alpha y tol. El parámetro alpha es el coeficiente que acompaña a la penalización (elegida la que viene por defecto) y tol es la tolerancia usada en el modelo.
 
-\item \textbf{Ramdom Forest}. Vamos a usar bootstrap porque es capaz de medir la
-incertidumbre de nuestro modelo mediante una técnica de reelección de muestras.
-Para determinar las máximas características del árbol vamos a usar la raíz
-cuadrada por que hay evidencias empíricas de que es el mejor. Hemos hecho
-inferencia sobre el criterio de selección, sobre si elegir entropy o gini. 
+\item \textbf{Ramdom Forest}. Vamos a usar bootstrap porque es capaz de medir la incertidumbre de nuestro modelo mediante una técnica de reelección de muestras. Para determinar las máximas características del árbol vamos a usar la raíz cuadrada por que hay evidencias empíricas de que es el mejor. Hemos hecho inferencia sobre el criterio de selección, sobre si elegir entropy o gini. 
+
+\item \textbf{MLPClasiffier} (Perceptron Multicapa).Hemos decidido usar el solver lbfgs que es newton pero con mejoras en memoria para reducir el tiempo, al igual que hicimos en Regresión Logística. También hemos fijado las iteraciones máximas a 20000 por que si no, no conseguía converger. Además, hacemos inferencia sobre los parámetros alpha (ya explicado antes) y función de activación. Para la función de activación damos tres opciones, 'logistic', 'tanh', 'relu': $ \frac{1}{1 + exp(-x)} , tanh(x), max(0, x)$ respectivamente.
+
+\item \textbf{SVC}. Para este modelo hemos fijado los parámetros kernel y gamma a rbf y scale respectivamente. Elegimos rbf por que es un kernel no lineal que no añade demasiada complejidad y \textbf{ scale por que }. Y hacemos inferencia sobre el parámetro C que ya hemos explicado en Regresión logística.
 
 \end{itemize}
 
@@ -249,8 +242,13 @@ Aquí decir que lineal good y que no hay nada que envidiar
 
 %comparación entre modelos lineales y no lineales
 %los resultados
-%las gráficas
+%las gráficas 
+%confusion matrix
 %ideonidad de los modelos
+
+
+%cosas que no se rellenar: porque gamma=scale, porque hemos decidido usar MLP y SVC
+%revisar métrica
 
 
 \end{document}
