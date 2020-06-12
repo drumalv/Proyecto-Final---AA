@@ -29,6 +29,13 @@ Proyecto Final de la asignatura de aprendizaje automático
 
 - Usamos Lasso por que nuestros datos no están fuertemente correlados y con la decisión tomada con las variables dummy parece interesante usar Lasso
 
+## Parametros
+
+### Random forest
+
+- Hemos probado los dos criterios porque se estudió en teoría que no había pruebas empíricas ni teóricas
+de que uno fuese mejor que otro. Hemos decidido probar con ambos y obtener el que da mejores resultados en el problema. 
+
 ## Modelos 
 
 Lineales:
@@ -40,9 +47,10 @@ No lineales:
 
 - [Perceptron Multicapa](https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html)
 - [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)
-- [SVD](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
+- [SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
 
 # Preguntas
 - Argumentar sobre la idoneidad de la función regularización usada 
 - Outliyers
 - hemos visto que un modelo que gana en CV saca peor Etest que otro que pierde en CV
+- tenemos las clases 75/25

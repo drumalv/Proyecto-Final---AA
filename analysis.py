@@ -67,8 +67,30 @@ dataSet=pd.concat([df,df_test])
 
 print(dataSet.shape)
 #vemos cuantos valores perdidos
+#rint(dataSet.isnull().sum(axis=0).sort_values(ascending = False).head(30))
+
+#print(dataSet.isnull().sum(axis=1).sort_values(ascending = False))
+
+print("Removing nan values")
+# thresh funciona al reves de lo que uno espera. Hacemos 14 para quedarnos
+# con las columnas que tienen mas de thres valores no null
+dataSet.dropna(thresh=14, inplace=True, axis=0)
+
+print(dataSet.isnull().sum(axis=1).sort_values(ascending = False))
+print(dataSet.isnull().sum(axis=0).sort_values(ascending = False).head(30))
+""""
+s = dataSet["native-country"].value_counts(normalize=True)
+missing = dataSet["native-country"].isnull()
+dataSet.loc[missing,"native-country"] = np.random.choice(s.index, size=len(dataSet[missing]),p=s.values)
+
+s = dataSet["occupation"].value_counts(normalize=True)
+missing = dataSet["occupation"].isnull()
+dataSet.loc[missing,"occupation"] = np.random.choice(s.index, size=len(dataSet[missing]),p=s.values)
+"""
 print(dataSet.isnull().sum(axis=0).sort_values(ascending = False).head(30))
 
+
+"""
 #eliminamos valores perdidos
 dataSet = dataSet.dropna()
 print(dataSet.isnull().sum(axis=0).sort_values(ascending = False).head(30))
@@ -84,7 +106,7 @@ dataSet = dataSet.drop(['education-num'], axis=1)
 
 
 #Encoding categorical values
-""" dataSet["workclass"] = dataSet["workclass"].astype('category')
+ dataSet["workclass"] = dataSet["workclass"].astype('category')
 dataSet["education"] = dataSet["education"].astype('category')
 dataSet["marital-status"] = dataSet["marital-status"].astype('category')
 dataSet["occupation"] = dataSet["occupation"].astype('category')
@@ -102,7 +124,7 @@ dataSet["relationship"] = dataSet["relationship"].cat.codes
 dataSet["race"] = dataSet["race"].cat.codes
 dataSet["sex"] = dataSet["sex"].cat.codes
 dataSet["native-country"] = dataSet["native-country"].cat.codes """
-
+"""
 cols_with_categories = ['workclass', 'education',"marital-status","occupation","relationship","race","sex","native-country"]
 
 for col in cols_with_categories:
@@ -147,7 +169,7 @@ sns.heatmap(correlation_matrix, cmap=cmap, vmax=.3, center=0,
             square=True, linewidths=.5, cbar_kws={"shrink": .5})
 
 plt.show()
-"""
+
 preproc=[
             ("var", VarianceThreshold(0.01)),   
             ("standardize", StandardScaler()),      
