@@ -92,21 +92,10 @@ df_test = pd.read_csv(data_test, index_col=False, delimiter=",", names=headers)
 df = pd.concat([df_train,df_test], ignore_index=True)
 
 
-# In[4]:
-
-
-df
-
-
-# In[5]:
-
-
 # Limpiamos los datos
 # en primer lugar vamos a sustituir los simbolos de interrogacion 
 # que hay en el dataset por valores NaN de numpy 
 
-
-# In[6]:
 
 
 df = df.replace('?', np.NaN)
@@ -115,19 +104,13 @@ df = df.replace(' ?', np.NaN)
 # mostramos el numero de valores null que hay en el dataset
 print("Numero de valores perdidos en el conjunto de datos: {}".format(
     df.isnull().sum(axis=0).sort_values(ascending = False).head(30)))
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # sustituimos los valores de income por etiquetas 0 y 1
 
 
 df['income'] = df['income'].str.strip()
 df['income'] = df['income'].str.replace(".", "")
 df['income'] = df['income'].map({'<=50K': 0, '>50K': 1})
-
-
-# In[7]:
-
-
-df
 
 
 # In[8]:
@@ -137,13 +120,14 @@ df
 print("Numero de valores perdidos en el conjunto de datos: {}".format(
     df.isnull().sum(axis=0).sort_values(ascending = False).head(30)))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[9]:
 
 
 print("Numero de datos de cada clase")
 print(df.income.value_counts())
 
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[10]:
 
@@ -158,7 +142,9 @@ plot = df.income.value_counts().plot(kind="bar", title="Numero de muestras de ca
 plot.set_xlabel("Clase")
 plot.set_ylabel("Número de muestras")
 plot.set_xticklabels( ('<=50K', '>50K'), rotation=1)
+plt.show()
 
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[12]:
 
@@ -195,25 +181,28 @@ print(df.isnull().sum(axis=0).sort_values(ascending = False).head(15))
 print("\nDatos perdidos por filas: ")
 print(df.isnull().sum(axis=1).sort_values(ascending = False).head(15))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[15]:
 
-
+print("Descripción del dataset")
 df2 = df.copy()
 print(df2.shape)
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # En primer lugar eliminamos los datos que tengan mas de un 10 % de 
 # valores perdidos
 df.dropna(thresh=df.shape[1]-1, inplace=True, axis=0)
 
+print("Eliminamos los datos con más de un 10 por ciento de valores perdidos")
 print("\nDatos perdidos por filas: ")
 print(df.isnull().sum(axis=1).sort_values(ascending = False))
+
+input("\n--- Pulsar tecla para continuar ---\n")
 
 print("\nDatos perdidos por columnas: ")
 print(df.isnull().sum(axis=0).sort_values(ascending = False).head(30))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[16]:
 
 
@@ -222,6 +211,7 @@ print(df.isnull().sum(axis=0).sort_values(ascending = False).head(30))
 # En este caso las columnas con valores perdidos que quedan son
 # native-country y occupation
 
+print("Procedemos a aplicar una multinomial para aproximar los valores que faltan: ")
 s = df["native-country"].value_counts(normalize=True)
 missing = df["native-country"].isnull()
 df.loc[missing,"native-country"] = np.random.choice(s.index, size=len(df[missing]),p=s.values)
@@ -233,11 +223,11 @@ df.loc[missing,"occupation"] = np.random.choice(s.index, size=len(df[missing]),p
 print("Datos perdidos por filas despues del procesado: ")
 print(df.isnull().sum(axis=1).sort_values(ascending = False))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 print("\nDatos perdidos por columnas despues del procesado: ")
 print(df.isnull().sum(axis=0).sort_values(ascending = False).head(30))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[17]:
 
 
@@ -246,23 +236,13 @@ print("Tamaño antes del conjunto de datos antes de recodificar las variables: {
 df = pd.get_dummies(data=df, columns=cols_with_categories)
 print("Tamaño antes del conjunto de datos despues de recodificar las variables: {}".format(df.shape))
 
-
-# In[18]:
-
-
-df
-
-
-# In[19]:
+input("\n--- Pulsar tecla para continuar ---\n")
 
 
 # creamos los conjuntos de training y de test
 X, y = df[df.columns.difference(['income'])], df['income']
 X, y = shuffle(X, y, random_state=SEED)
 train_x, test_x, train_y, test_y = train_test_split(X,y, test_size=0.8, stratify=y)
-
-
-# In[20]:
 
 
 # creamos la pipeline de preprocesado
@@ -287,7 +267,7 @@ print("Descripción de los datos antes y después del preprocesado")
 print("Antes: {}".format(train_x.shape))
 print("Despues: {}".format(x_train_prep.shape))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[23]:
 
 
@@ -312,8 +292,6 @@ params_lineal = {
 best_clf_lin = GridSearchCV(pipe_lineal, params_lineal, scoring = 'f1',cv = 5, n_jobs = -1, verbose=1)
 
 
-# In[24]:
-
 
 # Entrenamos
 best_clf_lin.fit(train_x, train_y)
@@ -322,16 +300,12 @@ best_clf_lin.fit(train_x, train_y)
 # In[25]:
 
 
-print("Mejores parámetros para LR: ")
+print("\nMejores parámetros para LR: ")
 best_clf_lin.best_params_
-
-
-# In[26]:
-
 
 print("F1 en training:", round(100.0 * best_clf_lin.score(train_x, train_y), 5))
 print("F1 en test: ", round(100.0 * best_clf_lin.score(test_x, test_y),5))
-
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[27]:
 
@@ -357,8 +331,8 @@ best_clf_random.fit(train_x, train_y)
 # In[29]:
 
 
-print("Mejores parámetros para RF: ")
-best_clf_random.best_params_
+print("\nMejores parámetros para RF: ")
+print(best_clf_random.best_params_)
 
 
 # In[30]:
@@ -366,7 +340,7 @@ best_clf_random.best_params_
 
 print("F1 en training:", round(100.0 * best_clf_random.score(train_x, train_y),5))
 print("F1 en test: ", round(100.0 * best_clf_random.score(test_x, test_y),5))
-
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[31]:
 
@@ -393,18 +367,13 @@ best_clf_perceptron.fit(train_x, train_y)
 
 # In[33]:
 
-
+print("\nMejores parámetros para Perceptron: ")
+print(best_clf_perceptron.best_params_)
 print("F1 en training:", round(100.0 * best_clf_perceptron.score(train_x, train_y),5))
 print("F1 en test: ", round(100.0 * best_clf_perceptron.score(test_x, test_y),5))
 
 
-# In[34]:
-
-
-print("Mejores parámetros para Perceptron: ")
-best_clf_perceptron.best_params_
-
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[35]:
 
 
@@ -428,17 +397,13 @@ best_clf_mlp.fit(train_x, train_y)
 # In[37]:
 
 
-print("Mejores parámetros para MLP: ")
-best_clf_mlp.best_params_
-
-
-# In[38]:
-
+print("\nMejores parámetros para MLP: ")
+print(best_clf_mlp.best_params_)
 
 print("F1 en training:", round(100.0 * best_clf_mlp.score(train_x, train_y),5))
 print("F1 en test: ", round(100.0 * best_clf_mlp.score(test_x, test_y),5))
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[39]:
 
 
@@ -459,8 +424,8 @@ best_clf_svm.fit(train_x, train_y)
 # In[41]:
 
 
-print("Mejores parámetros para SVM: ")
-best_clf_svm.best_params_
+print("\nMejores parámetros para SVM: ")
+print(best_clf_svm.best_params_)
 
 
 # In[42]:
@@ -468,7 +433,7 @@ best_clf_svm.best_params_
 
 print("F1 en training:", round(100.0 * best_clf_svm.score(train_x, train_y),5))
 print("F1 en test: ", round(100.0 * best_clf_svm.score(test_x, test_y),5))
-
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[43]:
 
@@ -542,9 +507,9 @@ best_clf.fit(train_x, train_y)
 
 
 print("Mejor modelo obtenido")
-best_clf.best_params_
+print(best_clf.best_params_)
 
-
+input("\n--- Pulsar tecla para continuar ---\n")
 # In[48]:
 
 
@@ -561,12 +526,6 @@ algs = ["LR", "Perceptron", "RandomForest", "MLP", "SVC"]
 
 
 results = [best_clf.cv_results_["split{}_test_score".format(i)] for i in range(5)]
-
-
-# In[51]:
-
-
-results
 
 
 # In[52]:
@@ -587,15 +546,9 @@ cv_results_pandas = pd.DataFrame(results)
 cv_results_pandas["Modelo"] = algs
 
 
-# In[55]:
-
-
-cv_results_pandas
-
-
 # In[56]:
 
-
+print("Grafico de tipo box and whiskers de los errores de validación cruzada")
 sns.set_style('ticks')
 fig, ax = plt.subplots()
 # the size of A4 paper
@@ -606,7 +559,7 @@ fig.set_size_inches(11.7, 8.27)
 sns.boxplot(x=algs, y=results)  
 sns.despine()
 plt.show()
-
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[57]:
 
@@ -631,6 +584,9 @@ modelos = [best_clf_lin, best_clf_random, best_clf_mlp]
 
 # In[60]:
 
+print("Mostramos graficas de precission vs recall")
+
+
 
 for m, model in zip(["RL", "Random Forest", "MLP"], modelos):
     lr_probs = model.predict_proba(test_x)
@@ -654,7 +610,7 @@ for m, model in zip(["RL", "Random Forest", "MLP"], modelos):
     plt.legend()
     # show the plot
     plt.show()
-
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[61]:
 
@@ -670,17 +626,19 @@ modelos = [("Regresión logística",best_clf_lin), ("Perceptrón", best_clf_perc
 
 # In[63]:
 
+print("Mostramos las matrices de confusión de los modelos")
 
 for name, model in modelos:
     print("Matriz de confusión para {}".format(name))
     y_pred = model.predict(test_x)
     print(confusion_matrix(test_y, y_pred))
-
+input("\n--- Pulsar tecla para continuar ---\n")
 
 # In[64]:
 
-
+print("Usamos accuracy para estimar el etest")
 for name, model in modelos:
     print("Accuracy para el modelo {}: {}.\nE_test:{}\n".format(name, round(accuracy_score(test_y, y_pred),4), round(1-accuracy_score(test_y, y_pred),4)))
     y_pred = model.predict(test_x)
 
+input("\n--- Pulsar tecla para continuar ---\n")

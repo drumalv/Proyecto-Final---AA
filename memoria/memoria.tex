@@ -105,11 +105,9 @@ en clasificación parece indispensable probar este modelo.
 De los modelos no lineales propuestos hemos elegido Perceptron Multicapa, Random
 Forest y SVD.
 
-Vamos a usar Ramdom Forest por que suele ser bueno para clasificación, a parte
-de que es poco sensible a cambios en el conjunto de train (vamos a usar
-validación cruzada). Además, de los algoritmos actuales ninguno le supera en
-precisión y nuestros datos no están correlados factor que mejora su
-rendimiento.
+Vamos a usar Ramdom Forest por que suele ser bueno para problemas de clasificación
+y poco sensible a cambios en el conjunto de train (vamos a usar
+validación cruzada).
 
 Perceptron Multicapa es un modelo que nos permite aprender funciones no lineales
 utilizando la técnica de \textit{backpropagation}. Este tipo de algoritmos son
@@ -672,6 +670,14 @@ resultados que obtenemos con cada modelo.
 En función de los resultados obtenidos con las datos de los que disponemos el
 mejor modelo que podemos elegir es \textit{Perceptrón multicapa} que es el que
 ha obtenido menor error en el conjunto de test.
+
+Sobre el error $E_{out}$ que esperamos de este modelo podemos decir que será
+cercano al error $E_{test}$ que hemos obtenido en este experimento. No creemos
+que sea adecuado ofrecer una cota más general ya que las que hemos visto son muy
+laxas y son cotas teóricas más que prácticas. Por como se ha conducido el
+experimento y por los resultados que se obtienen podemos decir que la cota del 
+error $E_{out}$ será próxima en general al $E_{test}$ obtenido para este modelo
+en esta sección.
 
 \section{Conclusiones}
 
