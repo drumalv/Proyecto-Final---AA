@@ -3,7 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
 \usepackage{booktabs}  
-\usepackage{graphicx} 
+\usepackage{subfig,graphicx} 
 \usepackage{listings}
 \usepackage{amsmath,amsthm,amssymb}
 \usepackage{float}
@@ -21,8 +21,8 @@ numbers=left,numberstyle=\scriptsize
 \usepackage{url}
 \usepackage{hyperref}
 
-\title{Memoria Proyecto Final}
-\author{Álvaro Beltrán y Yábir García}
+\title{Memoria del Proyecto Final}
+\author{Álvaro Beltrán Camacho \\ Yábir García Benchakhtir}
 \begin{document}
 
 \maketitle
@@ -46,7 +46,7 @@ Para nuestro proyecto nos hemos decantado por trabajar con el conjunto de datos
 
 Se nos presenta un conjunto muestras para las que se han recogido distintos
 parámetros que pueden afectar a la cantidad de dinero que se ingresa. Las
-variables, las cuales se analizarán posteriormente, abarcan desde la ] edad
+variables, las cuales se analizarán posteriormente, abarcan desde la edad
 hasta el país de origen y el problema consiste en determinar cuando una muestra
 va superar las 50000 unidades monetarias de ingresos y cuando se va a mantener
 por debajo.
@@ -123,7 +123,7 @@ Suport Vector Machine preparado para hacer clasificación. Hemos visto que es un
 técnica muy potente que puede darnos muy buenos resultados cuando tenemos un alto 
 número de características. Este a priori, no es nuestro caso pero cuando, como a 
 continuación veremos, recodifiquemos las variables observaremos que el número 
-de variables crecerá y esta técninca nos puede proporcionar resultados de interes.
+de variables crecerá y esta técninca nos puede proporcionar resultados de interés.
 
 \section{Exploración y preprocesado de los datos}
 
@@ -158,7 +158,7 @@ Respecto al total del conjunto de datos nos encontramos que disponemos de
 y \text{adult.test}. 
 
 De estas 48843 una es una irregularidad en el archivo \textit{adult.test} que contiene 
-una linea no válida.
+una línea no válida.
 
 Los datos contienen 14 columnas que se corresponden a 13 características mas 
 la etiqueta que se predice. De entre las muestras las características que mas datos
@@ -171,7 +171,7 @@ perdidos tienen son
 \end{enumerate}
 
 el resto de características solo tienen un valor perdido que se corresponde 
-con la linea erronea en el archivo de \textit{adult.test}.
+con la línea erronea en el archivo de \textit{adult.test}.
 
 En lo que respecta al número de clases aproximadamente un $75\%$ se corresponden 
 con la etiqueta $<=50K$ y un $25\%$ con la etiqueta $>50K$ (etiquetas que hemos
@@ -233,7 +233,7 @@ enunciado, hemos eliminado las instancias cuyos valores perdidos superaran el
 hemos rellenado los valores perdidos restantes con la multinomial asignando a
 cada posible valor del domino del atributo una probabilidad dependiendo de la
 cantidad de veces que aparecen en las instancias. Para ello, hemos usado la
-funcion choice de la libreria random, determinando el dominio y las
+función choice de la libreria random, determinando el dominio y las
 probabilidades con las que aparecen cada objeto del dominio.
 
 \subsection{Pipeline pre-entrenamiento}
@@ -289,17 +289,18 @@ elección de hiperparámetros, pero no se puede elegir la métrica con la que se
 regulariza.
 
 
-\section{Justificación de la función de pérdida usada.}
+\section{Métrica usada en el ajuste de los modelos}
 
-En un principio pensamos en usar exactitud (Accuracy), pero esta métrica no
-funciona bien cuando las clases están desbalanceadas como es en este caso. Así
-que, es muy fácil acertar diciendo que dicha predicción está en la clase más
-probable. Para problemas con clases desbalanceadas es mucho mejor usar
-precisión. Esta métrica da una mejor idea de la calidad del modelo. 
+En un principio pensamos en usar exactitud (Accuracy), pero esta métrica no es
+la idonea en un problema donde contamos con clases desbalanceadas, como pasa en
+este caso, por propia definión de la puntuación que se obtiene. 
+
+Para problemas puede ser más interesante estudiar la métrica precisión que nos
+proporciona información de mayor calidad sobre el comportamiento del modelo 
+
 \begin{align*}
 \frac{TP}{TP+FP}
 \end{align*}
-
 
 Si llamamos la clase negativa a la clase mayoritaria, recibir menos de 50K u.m y
 positiva a la clase minoritaria, recibir mas de 50K u.m. Con la métrica
@@ -316,7 +317,7 @@ que se define como
     F_1 = 2\frac{\text{Precission} * \text{Recall}}{\text{Precission} + \text{Recall}} 
 \]
 
-donde \textit{Recall} es la métrica que nos da 
+donde \textit{Recall} viene dada por la expresión
 
 \[
     \frac{TP}{TP+FN}
@@ -324,14 +325,17 @@ donde \textit{Recall} es la métrica que nos da
 
 Usando $F_1$ como métrica lo que hacemos es tener un equilibrio entre Recall y
 Precission con lo que no favorecemos ninguna clase sobre la otra y entrenamos de
-una manera más general teniendo en cuenta el desbalanceo entre clases.
+una manera más general teniendo en cuenta el desbalanceo entre clases. Esta
+métrica si bien a la hora de entrenar el modelo nos puede dar una idea 
+de como se comporta, es una métrica compuesta y compleja de analizar.
 
 \section{Estimación de los hiperparámetros.}
 
 %rellenar hiperparametros de los otros dos
 
 Para los modelos estudiados anteriormente hemos seleccionado una serie de
-parámetros y vamos a hacer inferencia sobre otros:
+parámetros y vamos a hacer una búsqueda en un subconjunto de valores que creemos
+adecuados de los mismos:
 
 \begin{itemize}
 
@@ -343,38 +347,43 @@ penalización $l1$ ya que usamos Lasso. Y entrenamos buscando los valores óptim
 sobre los parámetros $C$ y $tol$. El parámetro $C$ es el coeficiente que
 acompaña a la penalización y tol es la tolerancia usada en el modelo.
 
-\item \textbf{Perceptron}. Hemos prefijado la máximas iteraciones a 2000 por que
-probando con menos no acababa y hemos decidido que baraje los datos en cada
-iteración del perceptron como hemos visto en teoría. Hacemos inferencia sobre
-los parámetros alpha y tol. El parámetro alpha es el coeficiente que acompaña a
-la penalización (elegida la que viene por defecto) y tol es la tolerancia usada
-en el modelo.
+\item \textbf{Perceptron}. Hemos fijar el número máximo de iteraciones a 2000 ya
+que en pruebas previas hemos visto que un valor menor agotaba siempre el número
+de iteraciones. Además hemos decidido que baraje los datos en cada iteración
+como se ha trabajado en los algoritmos vistos en teoría. Hacemos inferencia
+sobre los parámetros alpha y tol. El parámetro alpha es el coeficiente que
+acompaña a la penalización (para la cual hemos optado por elegir $l1$) y tol es
+la tolerancia usada en el modelo.
 
 \item \textbf{Ramdom Forest}. Vamos a usar bootstrap porque es capaz de medir la
 incertidumbre de nuestro modelo mediante una técnica de reelección de muestras.
 Para determinar las máximas características del árbol vamos a usar la raíz
-cuadrada por que hay evidencias empíricas de que es el mejor. Hemos hecho
-inferencia sobre el criterio de selección, sobre si elegir entropy o gini. 
+cuadrada porque, como hemos estudiado, es uno de los criterios más extendidos y
+no presenta desventaja empírica frente a otros. Finalemente hemos buscado,
+entre los criterios \textit{gini} y \textit{entropy} cual nos proporcionaba 
+mejores resultados.
 
 \item \textbf{MLPClasiffier} (Perceptron Multicapa).Hemos decidido usar el
-solver lbfgs que es newton pero con mejoras en memoria para reducir el tiempo,
-al igual que hicimos en Regresión Logística. También hemos fijado las
-iteraciones máximas a 20000 por que si no, no conseguía converger. Además,
-hacemos inferencia sobre los parámetros alpha (ya explicado antes) y función de
-activación. Para la función de activación damos tres opciones, 'logistic',
-'tanh', 'relu': $ \frac{1}{1 + exp(-x)} , tanh(x), max(0, x)$ respectivamente.
+solver lbfgs que utilzia el método de newton pero con mejoras en memoria para
+reducir el tiempo, al igual que hicimos en Regresión Logística. También hemos
+fijado las iteraciones máximas a 20000 por que si no, no conseguía converger.
+Además, hacemos inferencia sobre los parámetros alpha (ya explicado antes) y
+función de activación. Para la función de activación damos tres opciones,
+'logistic', 'tanh', 'relu': $ \frac{1}{1 + exp(-x)} , tanh(x), max(0, x)$
+respectivamente.
 
 \item \textbf{SVC}. Para este modelo hemos fijado los parámetros kernel y gamma
 a rbf y scale respectivamente. Elegimos rbf por que es un kernel no lineal que
 no añade demasiada complejidad y scale poque así amoldamos gamma a la escala del
-dataset. Y hacemos inferencia sobre el parámetro C que ya hemos explicado en
-Regresión logística.
+dataset. La optimización del modelo la hemos rehalizado sobre el parámetro $C$
+que ya hemos explicado en Regresión logística.
 
 \end{itemize}
 
 \section{Resultados obtenidos}
 
-Los resultados que mostramos a continuación de $E_{in}$, $E_{out}$ y $E_{cv}$ están expresados en tanto porciento.
+Los resultados que se muestran a continuación para $F1$ han sido trasladados al
+intervalo $[0,100]$.
 
 \subsection{Regresión Logística}
 
@@ -404,12 +413,12 @@ Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
 \subsection{Perceptron}
 
 \begin{itemize}
-    \item Coeficiente alpha: $1.0$
+    \item Coeficiente alpha: $0.0001$
     \item max\_iter: $2000$
     \item Shuffle: $True$
     \item Solver: \textit{lbfgs}
-    \item Tolerance: $1e-06$
-    \item Características polinómicas de orden 1
+    \item Tolerance: $10$
+    \item Características polinómicas de orden 2
 \end{itemize}
 
 Los resultados que se han obtenido han sido los siguientes:
@@ -419,7 +428,7 @@ Los resultados que se han obtenido han sido los siguientes:
 \begin{tabular}{|l|l|l|}
 \hline
 Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
-Perceptron & 58.02626 & 57.23819 \\ \hline
+Perceptron & 65.44315 & 60.43744 \\ \hline
 \end{tabular}
 \caption{Resultados para perceptron con los mejores parámetros }
 \end{table}
@@ -491,7 +500,7 @@ Procedemos a recuperar los resultados en una única tabla
     \hline
     Algoritmo    & $F1_{in} $  & $F1_{out}$ \\ \hline
     Regresión Logística   & 72.37175  & 66.40552 \\ \hline
-    Perceptron & 58.02626 & 57.23819 \\ \hline
+    Perceptron & 65.44315 & 60.43744 \\ \hline
     Random Forest   & 90.33432 & 66.77672 \\ \hline
     MLP   & 74.09133 & 66.60767 \\ \hline
     SVC   & 77.82679 & 64.20312 \\ \hline
@@ -547,8 +556,139 @@ random forest y perceptron pero hay un conjunto de validación para el que los
 rendimientos son muy pobres y lastran el resultado final de la media.
 
 Por el razonamiento que ya se ha expuesto sobre el problema que supone el
-desbalanceo en las dos clases creemos que no es suficiente utilizar la métrica 
+desbalanceo en las dos clases, creemos que no es suficiente utilizar la métrica 
 $F1$ para decantarnos por un modelo u otro. 
+
+El estudio de la curva ROC como se menciona en \cite{curves} no es muy
+interesante ya que las clases presentan un desbalanceo moderado entre ellas y
+por tanto nos hemos decantado por realizar un estudio de la curva
+\textit{precission-recall}. Este tipo de curva representa en el eje vertical el
+valor predicho para la clase positiva y en el eje horizontal el verdadero ratio
+de positivos. Para los modelos the regresión logistica, random forest y MLP que
+son los que sklearn nos permite dibujar este tipo de gráficas hemos obtenido 
+los siguientes resultados:
+
+\begin{figure}[H]\centering
+    \subfloat[Curva P-R para regresión logística]{\label{a}\includegraphics[width=.45\linewidth]{images/prlr}}\hfill
+    \subfloat[Curva P-R para random forest]{\label{b}\includegraphics[width=.45\linewidth]{images/prrf}}\par 
+    \subfloat[Curva P-R para MLP]{\label{c}\includegraphics[width=.45\linewidth]{images/prmlp}}
+    \caption{Curvas precission vs recall}
+\end{figure}
+
+Estas curvas no muestran un comportamiento óptimo, que sería una linea
+horizontal en 1 que desciende al final pero si muestran un comportamiento 
+que podemos considerar bueno. 
+
+También creemos que es importante para comparar los modelos presentar la 
+\textit{tabla de confusión} de los mismos. En esta tabla recogemos 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lll}
+                          &          Clase $\leq$ 50K        &       Clase $>$50K                \\ \cline{2-3} 
+    \multicolumn{1}{l|}{Clase $\leq$ 50K} & \multicolumn{1}{l|}{verdadero positivo} & \multicolumn{1}{l|}{falso positivo} \\ \cline{2-3} 
+    \multicolumn{1}{l|}{Clase $>$50K } & \multicolumn{1}{l|}{falso negativo} & \multicolumn{1}{l|}{verdadero negativo} \\ \cline{2-3} 
+    \end{tabular}
+    \caption{Significado de la matriz de confusión}
+\end{table}
+
+En el caso de los modelos estudiados dichas tablas son las siguientes
+
+\textbf{Regresión logística}
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+                          &          Clase $\leq$ 50K        &       Clase $>$50K                \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $\leq$ 50K} & \multicolumn{1}{l|}{25410} & \multicolumn{1}{l|}{2287} \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $>$50K } & \multicolumn{1}{l|}{3459} & \multicolumn{1}{l|}{5679} \\ \cline{2-3} 
+\end{tabular}
+\caption{Confusion matrix para regresión logística}
+\end{table}
+
+\textbf{Perceptrón}
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+                          &          Clase $\leq$ 50K        &       Clase $>$50K                \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $\leq$ 50K} & \multicolumn{1}{l|}{24520} & \multicolumn{1}{l|}{3177} \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $>$50K } & \multicolumn{1}{l|}{3805} & \multicolumn{1}{l|}{5333} \\ \cline{2-3} 
+\end{tabular}
+\caption{Confusion matrix para Perceptrón}
+\end{table}
+
+\textbf{Random Forest}
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+                          &          Clase $\leq$ 50K        &       Clase $>$50K                \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $\leq$ 50K} & \multicolumn{1}{l|}{25537} & \multicolumn{1}{l|}{2160} \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $>$50K } & \multicolumn{1}{l|}{3475} & \multicolumn{1}{l|}{5663} \\ \cline{2-3} 
+\end{tabular}
+\caption{Confusion matrix para Random Forest}
+\end{table}
+
+\textbf{Perceptrón Multicapa}
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+                          &          Clase $\leq$ 50K        &       Clase $>$50K                \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $\leq$ 50K} & \multicolumn{1}{l|}{25530} & \multicolumn{1}{l|}{2167} \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $>$50K } & \multicolumn{1}{l|}{3493} & \multicolumn{1}{l|}{5645} \\ \cline{2-3} 
+\end{tabular}
+\caption{Confusion matrix para Perceptrón Multicapa}
+\end{table}
+
+\textbf{SVC}
+\begin{table}[H]
+\centering
+\begin{tabular}{lll}
+                          &          Clase $\leq$ 50K        &       Clase $>$50K                \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $\leq$ 50K} & \multicolumn{1}{l|}{25443} & \multicolumn{1}{l|}{2254} \\ \cline{2-3} 
+\multicolumn{1}{l|}{Clase $>$50K } & \multicolumn{1}{l|}{3752} & \multicolumn{1}{l|}{5386} \\ \cline{2-3} 
+\end{tabular}
+\caption{Confusion matrix para SVC}
+\end{table}
+
+En estas tablas se puede comprobar como la semejanza que existía en la
+puntuación que arrojaba la métrica $F1$, se ha traducido en unos valores casi
+idénticos en las distintas entradas de las matrices de confusión. Esto nos dice
+que en principio no existe un motivo para elegir un modelo sobre otro en función
+de la clase que queramos predecir con mayor rigor. 
+
+Por último para decantarnos por un modelo u otro hemos decidido evaluarlos con
+la métrica accuracy y obtener un error de test con el que poder comparar los
+resultados que obtenemos con cada modelo.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{c|c|c|c|c|c|}
+    \cline{2-6}
+                           & RL & Perceptrón & Random Forest & MLP & SVC \\ \hline
+    \multicolumn{1}{|l|}{$E_{test}$}  & 0.1631 & 0.156 & 0.1895  & 0.153  & 0.1537  \\ \hline
+    \end{tabular}
+    \caption{$E_{test}$ obtenido para cada modelo usando accuracy como métrica}
+\end{table}
+
+En función de los resultados obtenidos con las datos de los que disponemos el
+mejor modelo que podemos elegir es \textit{Perceptrón multicapa} que es el que
+ha obtenido menor error en el conjunto de test.
+
+\section{Conclusiones}
+
+En este proyecto hemos tenido la oportunidad de estudiar un problema de
+clasificación binaria en el que se nos presentaba el reto de trabajar con 
+dos clases de datos de las que no teníamos igual número de muestras. 
+
+Hemos aprendido técnicas que nos han permitido decantarnos por unos modelos y
+entrenarlos con un criterio que creemos correcto y finalmente hemos estudiado
+los resultados que se han obtenido discutiendo la ideonidad de elegir unos
+frente a otros. 
+
+Además creemos que ha sido especialmente interesante la igualdad que se ha
+demostrado entre casi todos los modelos y como el modelo de Perceptrón,
+pese a ser un modelo lineal, obtiene resultados próximos a otros modelos más
+complejos a nivel teórico.
+
 
 %comparación entre modelos lineales y no lineales
 %los resultados 

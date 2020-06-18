@@ -8,7 +8,7 @@
 \BOOKMARK [2][-]{subsection.4.4}{Valores perdidos}{section.4}% 8
 \BOOKMARK [2][-]{subsection.4.5}{Pipeline pre-entrenamiento}{section.4}% 9
 \BOOKMARK [1][-]{section.5}{Regularizaci\363n}{}% 10
-\BOOKMARK [1][-]{section.6}{Justificaci\363n de la funci\363n de p\351rdida usada.}{}% 11
+\BOOKMARK [1][-]{section.6}{M\351trica usada en el ajuste de los modelos}{}% 11
 \BOOKMARK [1][-]{section.7}{Estimaci\363n de los hiperpar\341metros.}{}% 12
 \BOOKMARK [1][-]{section.8}{Resultados obtenidos}{}% 13
 \BOOKMARK [2][-]{subsection.8.1}{Regresi\363n Log\355stica}{section.8}% 14
@@ -19,3 +19,4 @@
 \BOOKMARK [2][-]{subsection.8.6}{Recopilaci\363n de los resultados}{section.8}% 19
 \BOOKMARK [1][-]{section.9}{Elecci\363n del mejor modelo}{}% 20
 \BOOKMARK [2][-]{subsection.9.1}{An\341lisis de los resultados}{section.9}% 21
+\BOOKMARK [1][-]{section.10}{Conclusiones}{}% 22

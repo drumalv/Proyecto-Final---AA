@@ -6,10 +6,10 @@
 \contentsline {subsection}{\numberline {4.1}Codificación de las variables}{7}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Valoración del interes de las variables y selección de un subconjunto}{8}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Normalización de las variables}{8}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Valores perdidos}{9}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.4}Valores perdidos}{8}{subsection.4.4}%
 \contentsline {subsection}{\numberline {4.5}Pipeline pre-entrenamiento}{9}{subsection.4.5}%
 \contentsline {section}{\numberline {5}Regularización}{10}{section.5}%
-\contentsline {section}{\numberline {6}Justificación de la función de pérdida usada.}{10}{section.6}%
+\contentsline {section}{\numberline {6}Métrica usada en el ajuste de los modelos}{10}{section.6}%
 \contentsline {section}{\numberline {7}Estimación de los hiperparámetros.}{11}{section.7}%
 \contentsline {section}{\numberline {8}Resultados obtenidos}{12}{section.8}%
 \contentsline {subsection}{\numberline {8.1}Regresión Logística}{12}{subsection.8.1}%
@@ -20,3 +20,4 @@
 \contentsline {subsection}{\numberline {8.6}Recopilación de los resultados}{14}{subsection.8.6}%
 \contentsline {section}{\numberline {9}Elección del mejor modelo}{15}{section.9}%
 \contentsline {subsection}{\numberline {9.1}Análisis de los resultados}{15}{subsection.9.1}%
+\contentsline {section}{\numberline {10}Conclusiones}{19}{section.10}%

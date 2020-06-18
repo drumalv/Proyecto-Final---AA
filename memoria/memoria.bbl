@@ -1,5 +1,12 @@
 \begin{thebibliography}{1}
 
+\bibitem{curves}
+Machine~Learning Matery.
+\newblock How to use roc curves and precision-recall curves for classification
+  in python.
+\newblock
+  \url{"https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-classification-in-python/"}.
+
 \bibitem{metrics}
 Machine~Learning Metrics.
 \newblock Tour of evaluation metrics for imbalanced classification.
