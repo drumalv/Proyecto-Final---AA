@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+\documentclass[11pt]{article}
 \usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
@@ -18,6 +18,7 @@ numbers=left,numberstyle=\scriptsize
 \setlength{\parindent}{0pt}%
 
 %\usepackage[wby]{callouts}
+\usepackage{url}
 \usepackage{hyperref}
 
 \title{Memoria Proyecto Final}
@@ -41,7 +42,7 @@ numbers=left,numberstyle=\scriptsize
 \section{Definición del problema a resolver y enfoque elegido}
 
 Para nuestro proyecto nos hemos decantado por trabajar con el conjunto de datos
-\textit{Adult Census Income} recogido por Ronny Kohavi y Berry Becker. 
+\textit{Adult Census Income} recogido por Ronny Kohavi y Berry Becker \cite{dataset}. 
 
 Se nos presenta un conjunto muestras para las que se han recogido distintos
 parámetros que pueden afectar a la cantidad de dinero que se ingresa. Las
@@ -235,6 +236,42 @@ cantidad de veces que aparecen en las instancias. Para ello, hemos usado la
 funcion choice de la libreria random, determinando el dominio y las
 probabilidades con las que aparecen cada objeto del dominio.
 
+\subsection{Pipeline pre-entrenamiento}
+
+De cara a entrenar nuestros modelos nos hemos decantado por se utilice la
+siguiente lista ordenada de pasos en cada entrenamiento que recoge algunos de
+los criterios antes comentados:
+
+\begin{enumerate}
+    \item \textit{VarianceThreshold} con un valor por defecto de 0.01
+    \item \textit{StandardScaler}
+    \item \textit{PolynomialFeatures} con un valor por defecto de 1
+    \item \textit{LassoCV} técnica de selección de características basada en \textit{Lasso}
+\end{enumerate}
+
+El valor que hemos seleccionado para \textit{VarianceThreshold} ha sido de 0.01
+basado en diferentes pruebas que hemos realizado donde, valores más altos de
+este parámetro eliminaban gran cantidad de variables. Este hecho se produce por 
+la introducción de las variables dummies mencionadas con anterioridad y es por esto
+que finalmente nos hemos decantado por esta elección.
+
+Respecto a la introducción de características polinómicas en las variables
+introducimos un valor por defecto de 1 de manera que esta transformación no
+tiene efecto en los modelos. En el caso de los modelos lineales este tipo de
+transformaciones si es importante y es por esto que cuando entrenamos los modelos 
+lineales propuestos estudiamos valores para este paso. 
+
+Finalmente hemos decidido utilizar la técnica de selección de variables basada
+en Lasso ya que nos permite seleccionar variables en función de la importancia
+que el factor de regularización $l1$ asigna y lo hemos considerado importante ya
+que con anterioridad se introducen características polinómicas. Cuando
+introducimos las características polinómicas crecen sustancialmente  el número
+de características y creemos que esto puede provocar cierto sobreajuste en los
+datos por lo que esta técnica ha sido nuestra elección para solventar este
+problema.
+
+Tras aplicar esta \textit{pipeline de preprocesado} el número de características
+que estudiamos es de 48 en lugar de las 103 de las que partíamos. 
 
 \section{Regularización}
 
@@ -286,8 +323,8 @@ donde \textit{Recall} es la métrica que nos da
 \]
 
 Usando $F_1$ como métrica lo que hacemos es tener un equilibrio entre Recall y
-Precission con lo que no favorecemos ningún comportamiento y entrenamos de una manera 
-más general.
+Precission con lo que no favorecemos ninguna clase sobre la otra y entrenamos de
+una manera más general teniendo en cuenta el desbalanceo entre clases.
 
 \section{Estimación de los hiperparámetros.}
 
@@ -298,12 +335,13 @@ parámetros y vamos a hacer inferencia sobre otros:
 
 \begin{itemize}
 
-\item \textbf{Regresión Logística}. Hemos decidido usar el solver lbfgs que es
-newton pero con mejoras en memoria para reducir el tiempo, vamos a usar este
-porque newton adapta la tasa de aprendizaje según le convenga y por tanto es más
-eficaz. Usamos penalización L1 ya que usamos Lasso. Y hacemos inferencia sobre
-los parámetros C y tol. El parámetro C es el coeficiente que acompaña a la
-penalización y tol es la tolerancia usada en el modelo.
+\item \textbf{Regresión Logística}. Hemos decidido usar el solver lbfgs que
+utiliza métodos de newton pero con mejoras en memoria para reducir el tiempo.
+Nos hemos decantado por esta técnica ya que adapta la tasa de aprendizaje a
+medida que el aprendizaje tiene lugar y por tanto es más eficaz. Usamos
+penalización $l1$ ya que usamos Lasso. Y entrenamos buscando los valores óptimos
+sobre los parámetros $C$ y $tol$. El parámetro $C$ es el coeficiente que
+acompaña a la penalización y tol es la tolerancia usada en el modelo.
 
 \item \textbf{Perceptron}. Hemos prefijado la máximas iteraciones a 2000 por que
 probando con menos no acababa y hemos decidido que baraje los datos en cada
@@ -328,12 +366,15 @@ activación. Para la función de activación damos tres opciones, 'logistic',
 
 \item \textbf{SVC}. Para este modelo hemos fijado los parámetros kernel y gamma
 a rbf y scale respectivamente. Elegimos rbf por que es un kernel no lineal que
-no añade demasiada complejidad y scale poque así amoldamos gamma a la escala del dataset. Y hacemos inferencia
-sobre el parámetro C que ya hemos explicado en Regresión logística.
+no añade demasiada complejidad y scale poque así amoldamos gamma a la escala del
+dataset. Y hacemos inferencia sobre el parámetro C que ya hemos explicado en
+Regresión logística.
 
 \end{itemize}
 
 \section{Resultados obtenidos}
+
+Los resultados que mostramos a continuación de $E_{in}$, $E_{out}$ y $E_{cv}$ están expresados en tanto porciento.
 
 \subsection{Regresión Logística}
 
@@ -341,10 +382,11 @@ En el caso de la regresión logistica los mejores parámetros que se han obtenid
 han sido:
 
 \begin{itemize}
-    \item Coeficiente de regularización: $1000000.0$
+    \item Coeficiente de regularización: $100.0$
     \item Penalty: $l2$
     \item Solver: \textit{lbfgs}
     \item Tolerance: $0.001$
+    \item Características polinómicas de orden 2
 \end{itemize}
 
 Los resultados que se han obtenido han sido los siguientes:
@@ -353,8 +395,8 @@ Los resultados que se han obtenido han sido los siguientes:
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
- Regresión Logística   & 71.9281 & 71.0873 \\ \hline
+Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
+ Regresión Logística   & 72.37175  & 66.40552 \\ \hline
 \end{tabular}
 \caption{Resultados para regresión logistica con los mejores parámetros}
 \end{table}
@@ -366,7 +408,8 @@ Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
     \item max\_iter: $2000$
     \item Shuffle: $True$
     \item Solver: \textit{lbfgs}
-    \item Tolerance: $0.0031622776601683794$
+    \item Tolerance: $1e-06$
+    \item Características polinómicas de orden 1
 \end{itemize}
 
 Los resultados que se han obtenido han sido los siguientes:
@@ -375,8 +418,8 @@ Los resultados que se han obtenido han sido los siguientes:
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
-Perceptron & 53.8586 & 53.4161 \\ \hline
+Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
+Perceptron & 58.02626 & 57.23819 \\ \hline
 \end{tabular}
 \caption{Resultados para perceptron con los mejores parámetros }
 \end{table}
@@ -396,8 +439,8 @@ Los resultados que se han obtenido han sido los siguientes:
 \centering
 \begin{tabular}{|l|l|l|}
 \hline
-Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
-Random Forest   & 89.9642 & 70.9722 \\ \hline
+Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
+Random Forest   & 90.33432 & 66.77672 \\ \hline
 \end{tabular}
 \caption{Resultados para random forest con los mejores parámetros}
 \end{table}
@@ -415,11 +458,28 @@ Random Forest   & 89.9642 & 70.9722 \\ \hline
     \centering
     \begin{tabular}{|l|l|l|}
     \hline
-    Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
-    MLP   & 73.8746 & 73.0701 \\ \hline
+    Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
+    MLP   & 74.09133 & 66.60767 \\ \hline
     \end{tabular}
     \caption{Resultados para MLP con los mejores parámetros}
 \end{table}
+
+\subsection{Support vector classification}
+
+\begin{itemize}
+    \item C: 7
+\end{itemize}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    Algoritmo    & $F1_{in}$  & $F1_{out}$ \\ \hline
+    SVC   & 77.82679 & 64.20312 \\ \hline
+    \end{tabular}
+    \caption{Resultados para MLP con los mejores parámetros}
+\end{table}
+
 
 \subsection{Recopilación de los resultados}
 
@@ -429,11 +489,12 @@ Procedemos a recuperar los resultados en una única tabla
     \centering
     \begin{tabular}{|l|l|l|}
     \hline
-    Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
-    Regresión Logística   & 71.9281 & 71.0873 \\ \hline
-    Perceptron & 53.8586 & 53.4161 \\ \hline
-    Random Forest   & 89.9642 & 70.9722 \\ \hline
-    MLP   & 73.8746 & 73.0701 \\ \hline
+    Algoritmo    & $F1_{in} $  & $F1_{out}$ \\ \hline
+    Regresión Logística   & 72.37175  & 66.40552 \\ \hline
+    Perceptron & 58.02626 & 57.23819 \\ \hline
+    Random Forest   & 90.33432 & 66.77672 \\ \hline
+    MLP   & 74.09133 & 66.60767 \\ \hline
+    SVC   & 77.82679 & 64.20312 \\ \hline
     \end{tabular}
     \caption{Resultados con los mejores parámetros}
 \end{table}
@@ -441,11 +502,53 @@ Procedemos a recuperar los resultados en una única tabla
 \section{Elección del mejor modelo}
 
 Tras haber realizado una elección de los mejores parámetros de cada modelo hemos 
-decidido volver a aplicar la técnica de validación cruzada 
+decidido volver a aplicar la técnica de validación cruzada para la elección del 
+mejor modelo. 
 
-\section{Conclusiones}
+Hemos optado por esta técnica ya que así todos los modelos entrenan en igualdad
+de condiciones con la misma particición de datos y podemos obtener un resultado
+que haga comparables todos los modelos a partir de su error de validación cruzada.
 
-Aquí decir que lineal good y que no hay nada que envidiar
+En la siguiente tabla se recogen los resultados medios obtenidos para el error de 
+validación cruzada. 
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+    \hline
+    Algoritmo    & $ F1_{in} $  & $F1_{cv}$  & Posición\\ \hline
+    Regresión Logística   & 72.37175 & 68.42668 & 1 \\ \hline
+    Perceptron & 58.02626 & 61.45703 & 5\\ \hline
+    Random Forest   & 90.33432 & 67.91722 & 2\\ \hline
+    MLP   & 74.09133  & 67.61891 & 3\\ \hline
+    SVC   & 77.82679 &  65.65128 & 4\\ \hline
+    \end{tabular}
+    \caption{Resultados con los mejores parámetros}
+\end{table}
+
+\subsection{Análisis de los resultados}
+
+En primer lugar vamos a analizar los resultados obtenidos para la elección del
+mejor modelo basandonos en la técnica de validación cruzada. Para ello mostramos 
+a continuación un gráfico de tipo \textit{box and whiskers} que nos permite entender 
+los resultados obtenidos en las 5 particiones que se han realizado para hacer la validación
+cruzada.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{images/box_plot}
+    \caption{Puntuación F1 sobre los mismos conjuntos de validación cruzada}
+\end{figure}
+
+En este gráfico podemos ver que el algoritmo de regresión logistica consigue
+resultados muy parecidos en todas las particiones que se han realizado. También
+apreciamos como existen mejores resultados en general en los algoritmos de
+random forest y perceptron pero hay un conjunto de validación para el que los
+rendimientos son muy pobres y lastran el resultado final de la media.
+
+Por el razonamiento que ya se ha expuesto sobre el problema que supone el
+desbalanceo en las dos clases creemos que no es suficiente utilizar la métrica 
+$F1$ para decantarnos por un modelo u otro. 
 
 %comparación entre modelos lineales y no lineales
 %los resultados 
@@ -456,6 +559,8 @@ Aquí decir que lineal good y que no hay nada que envidiar
 
 %cosas que no se rellenar: porque gamma=scale, porque hemos decidido usar MLP y SVC
 %revisar métrica
-
+%\bibliographystyle{plain}
+\bibliographystyle{plain}
+\bibliography{refs}
 
 \end{document}

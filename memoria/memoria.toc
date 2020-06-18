@@ -1,20 +1,22 @@
 \babel@toc {spanish}{}
-\contentsline {section}{\numberline {1}Definición del problema a resolver y enfoque elegido}{3}{section.1}%
-\contentsline {section}{\numberline {2}Obtención de los datos}{3}{section.2}%
-\contentsline {section}{\numberline {3}Argumentos a favor de la elección de los modelos.}{4}{section.3}%
-\contentsline {section}{\numberline {4}Exploración y preprocesado de los datos}{5}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Codificación de las variables}{6}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Valoración del interes de las variables y selección de un subconjunto}{7}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Normalización de las variables}{7}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Valores perdidos}{7}{subsection.4.4}%
-\contentsline {section}{\numberline {5}Regularización}{8}{section.5}%
-\contentsline {section}{\numberline {6}Justificación de la función de pérdida usada.}{8}{section.6}%
-\contentsline {section}{\numberline {7}Estimación de los hiperparámetros.}{9}{section.7}%
-\contentsline {section}{\numberline {8}Resultados obtenidos}{10}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Regresión Logística}{10}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Perceptron}{10}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Random Forest}{11}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Multilayer Perceptron}{11}{subsection.8.4}%
-\contentsline {subsection}{\numberline {8.5}Recopilación de los resultados}{11}{subsection.8.5}%
-\contentsline {section}{\numberline {9}Elección del mejor modelo}{12}{section.9}%
-\contentsline {section}{\numberline {10}Conclusiones}{12}{section.10}%
+\contentsline {section}{\numberline {1}Definición del problema a resolver y enfoque elegido}{4}{section.1}%
+\contentsline {section}{\numberline {2}Obtención de los datos}{4}{section.2}%
+\contentsline {section}{\numberline {3}Argumentos a favor de la elección de los modelos.}{5}{section.3}%
+\contentsline {section}{\numberline {4}Exploración y preprocesado de los datos}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Codificación de las variables}{7}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Valoración del interes de las variables y selección de un subconjunto}{8}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Normalización de las variables}{8}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Valores perdidos}{9}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Pipeline pre-entrenamiento}{9}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Regularización}{10}{section.5}%
+\contentsline {section}{\numberline {6}Justificación de la función de pérdida usada.}{10}{section.6}%
+\contentsline {section}{\numberline {7}Estimación de los hiperparámetros.}{11}{section.7}%
+\contentsline {section}{\numberline {8}Resultados obtenidos}{12}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Regresión Logística}{12}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Perceptron}{13}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Random Forest}{13}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Multilayer Perceptron}{14}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Support vector classification}{14}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Recopilación de los resultados}{14}{subsection.8.6}%
+\contentsline {section}{\numberline {9}Elección del mejor modelo}{15}{section.9}%
+\contentsline {subsection}{\numberline {9.1}Análisis de los resultados}{15}{subsection.9.1}%

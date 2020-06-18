@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+
+\bibitem{metrics}
+Machine~Learning Metrics.
+\newblock Tour of evaluation metrics for imbalanced classification.
+\newblock
+  \url{"https://machinelearningmastery.com/tour-of-evaluation-metrics-for-imbalanced-classification/"}.
+
+\bibitem{dataset}
+UCI.
+\newblock Census income data set.
+\newblock \url{"https://archive.ics.uci.edu/ml/datasets/Census+Income"}.
+
+\end{thebibliography}

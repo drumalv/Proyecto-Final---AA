@@ -6,14 +6,16 @@
 \BOOKMARK [2][-]{subsection.4.2}{Valoraci\363n del interes de las variables y selecci\363n de un subconjunto}{section.4}% 6
 \BOOKMARK [2][-]{subsection.4.3}{Normalizaci\363n de las variables}{section.4}% 7
 \BOOKMARK [2][-]{subsection.4.4}{Valores perdidos}{section.4}% 8
-\BOOKMARK [1][-]{section.5}{Regularizaci\363n}{}% 9
-\BOOKMARK [1][-]{section.6}{Justificaci\363n de la funci\363n de p\351rdida usada.}{}% 10
-\BOOKMARK [1][-]{section.7}{Estimaci\363n de los hiperpar\341metros.}{}% 11
-\BOOKMARK [1][-]{section.8}{Resultados obtenidos}{}% 12
-\BOOKMARK [2][-]{subsection.8.1}{Regresi\363n Log\355stica}{section.8}% 13
-\BOOKMARK [2][-]{subsection.8.2}{Perceptron}{section.8}% 14
-\BOOKMARK [2][-]{subsection.8.3}{Random Forest}{section.8}% 15
-\BOOKMARK [2][-]{subsection.8.4}{Multilayer Perceptron}{section.8}% 16
-\BOOKMARK [2][-]{subsection.8.5}{Recopilaci\363n de los resultados}{section.8}% 17
-\BOOKMARK [1][-]{section.9}{Elecci\363n del mejor modelo}{}% 18
-\BOOKMARK [1][-]{section.10}{Conclusiones}{}% 19
+\BOOKMARK [2][-]{subsection.4.5}{Pipeline pre-entrenamiento}{section.4}% 9
+\BOOKMARK [1][-]{section.5}{Regularizaci\363n}{}% 10
+\BOOKMARK [1][-]{section.6}{Justificaci\363n de la funci\363n de p\351rdida usada.}{}% 11
+\BOOKMARK [1][-]{section.7}{Estimaci\363n de los hiperpar\341metros.}{}% 12
+\BOOKMARK [1][-]{section.8}{Resultados obtenidos}{}% 13
+\BOOKMARK [2][-]{subsection.8.1}{Regresi\363n Log\355stica}{section.8}% 14
+\BOOKMARK [2][-]{subsection.8.2}{Perceptron}{section.8}% 15
+\BOOKMARK [2][-]{subsection.8.3}{Random Forest}{section.8}% 16
+\BOOKMARK [2][-]{subsection.8.4}{Multilayer Perceptron}{section.8}% 17
+\BOOKMARK [2][-]{subsection.8.5}{Support vector classification}{section.8}% 18
+\BOOKMARK [2][-]{subsection.8.6}{Recopilaci\363n de los resultados}{section.8}% 19
+\BOOKMARK [1][-]{section.9}{Elecci\363n del mejor modelo}{}% 20
+\BOOKMARK [2][-]{subsection.9.1}{An\341lisis de los resultados}{section.9}% 21
