@@ -6,13 +6,17 @@
 \usepackage{graphicx} 
 \usepackage{listings}
 \usepackage{amsmath,amsthm,amssymb}
+\usepackage{float}
 
 \lstset{%
 backgroundcolor=\color{cyan!10},
 basicstyle=\ttfamily,
 numbers=left,numberstyle=\scriptsize
 }
-\setlength{\parindent}{0cm}
+
+\setlength{\parskip}{\baselineskip}%
+\setlength{\parindent}{0pt}%
+
 %\usepackage[wby]{callouts}
 \usepackage{hyperref}
 
@@ -77,24 +81,48 @@ para test. Descargamos ambos ficheros (\textit{adult.data}, \textit{adult.test})
 y en nuestro trabajo hemos decidido combinarlos para realizar una separación
 propia.
 
+El motivo de esta elección es que como se verá a continuación hay un alto número
+de muestras del total disponible a las que le falta el valor de alguna columna.
+Como en general son unas columnas concretas en las que las muestras no estan
+provistas del valor, se ha seguido el criterio expuesto en el guión de asignar
+un valor aleatorio en función de una distribución multinomial. Es por esto que
+hemos creido correcto que era mejor juntar los datos, aproximar los valores que
+faltaban y crear conjuntos de test y training basados en una poporción 80-20
+(80\% de los datos para training y 20\% para test).
+
 \section{Argumentos a favor de la elección de los modelos.}
 
 En cuanto a los modelos lineales elegidos nos hemos decantado por Regresión
 Logística y Perceptron, debido a que son dos modelos que hemos estudiado en
-clase para ejemplos de clasificación binaria, como es nuestro caso. \\
+clase para ejemplos de clasificación binaria, como es nuestro caso.  
 
 Además parece interesante probar con el Perceptron puesto que también vamos a
 usar el perceptron multicapa (MLP). Y puesto que Regresión Logística ha dado tan
 buenos resultados en las prácticas de esta asignatura y suele funcionar muy bien
-en clasificación parece indispensable probar este modelo.\\
+en clasificación parece indispensable probar este modelo.
 
-De los modelos no lineales propuestos hemos elegido Perceptron Multicapa, Random Forest y SVD.\\
+De los modelos no lineales propuestos hemos elegido Perceptron Multicapa, Random
+Forest y SVD.
 
-Vamos a usar Ramdom Forest por que suele ser bueno para clasificación, a parte de que es poco sensible a cambios en el conjunto de train (vamos a usar validación cruzada). Además, de los algoritmos actuales ninguno le supera en precisión y nuestros datos no están correlados factor que mejora su rendimiento.\\
+Vamos a usar Ramdom Forest por que suele ser bueno para clasificación, a parte
+de que es poco sensible a cambios en el conjunto de train (vamos a usar
+validación cruzada). Además, de los algoritmos actuales ninguno le supera en
+precisión y nuestros datos no están correlados factor que mejora su
+rendimiento.
 
-Perceptron Multicapa.\\
+Perceptron Multicapa es un modelo que nos permite aprender funciones no lineales
+utilizando la técnica de \textit{backpropagation}. Este tipo de algoritmos son
+interesantes ya que nos permiten aprender relaciones entre las variables y cual
+es la mejor manera con la que relacionarlas con nuestra función de salida. Es
+por esto que esta técnica tiene gran interés y por lo que nosotros hemos
+decidido usarala.
 
-SVC.\\
+SVC. En nuestro caso nos hemos decantado por utilizar también un algoritmo de tipo
+Suport Vector Machine preparado para hacer clasificación. Hemos visto que es una 
+técnica muy potente que puede darnos muy buenos resultados cuando tenemos un alto 
+número de características. Este a priori, no es nuestro caso pero cuando, como a 
+continuación veremos, recodifiquemos las variables observaremos que el número 
+de variables crecerá y esta técninca nos puede proporcionar resultados de interes.
 
 \section{Exploración y preprocesado de los datos}
 
@@ -208,25 +236,6 @@ funcion choice de la libreria random, determinando el dominio y las
 probabilidades con las que aparecen cada objeto del dominio.
 
 
-
-\subsection{Conjunto de training y test}
-
-En los datos extraidos se obitienen dos conjuntos de datos, uno pensado para
-training y otro para test. Se nos indica además que en cada uno de estos
-conjuntos encontramos un $75\%$ de muestras clasificadas con ingresos inferiores
-a las 50000 u.m. y el $25\%$ con ingresos superiores a dicho valor. 
-
-Hemos considerado conveniente realizar una separación de los datos en la que las
-clases esten balanceadas ya que es un aspecto importante en los algoritmos de
-clasificación y que puede afectar a la misma. 
-
-Respecto a la separación de los datos, hemos decidido realizar una separación
-$80-20$ para training y test respectivamente.
-
-No hemos realizado una separación para datos de validación ya que nos hemos
-decantado, como se describe en secciones posteriores, por un sistema de elección
-de hiperparámetros basado en validación cruzada.
-
 \section{Regularización}
 
 En el caso del modelo lineal nos hemos decantado por utilizar regularización
@@ -245,7 +254,11 @@ regulariza.
 
 \section{Justificación de la función de pérdida usada.}
 
-En un principio pensamos en usar exactitud (Accuracy), pero esta métrica da no funciona bien cuando las clases están desbalanceadas como es en este caso. Así que, es muy fácil acertar diciendo que dicha predicción está en la clase más probable. Para problemas con clases desbalanceadas es mucho mejor usar precisión. Esta métrica da una mejor idea de la calidad del modelo. 
+En un principio pensamos en usar exactitud (Accuracy), pero esta métrica no
+funciona bien cuando las clases están desbalanceadas como es en este caso. Así
+que, es muy fácil acertar diciendo que dicha predicción está en la clase más
+probable. Para problemas con clases desbalanceadas es mucho mejor usar
+precisión. Esta métrica da una mejor idea de la calidad del modelo. 
 \begin{align*}
 \frac{TP}{TP+FP}
 \end{align*}
@@ -253,9 +266,28 @@ En un principio pensamos en usar exactitud (Accuracy), pero esta métrica da no 
 
 Si llamamos la clase negativa a la clase mayoritaria, recibir menos de 50K u.m y
 positiva a la clase minoritaria, recibir mas de 50K u.m. Con la métrica
-(\textit{precission}) \cite{metrics} nos concentramos mas en la clase positiva y en 
-la probabilidad de de detectar la clase positiva y no tanto en distinguir la 
+(\textit{precission}) \cite{metrics} nos concentramos mas en la clase positiva y
+en la probabilidad de de detectar la clase positiva y no tanto en distinguir la
 clase negativa de la positiva.
+
+Esta métrica era nuestra primera idea pero, al no plantearse contexto en el problema,
+no existe un criterio que nos haga centrarnos en una clase respecto a otra. Por este 
+motivo hemos considerado que la mejor opción era utilizar la métrica $F_1$ 
+que se define como 
+
+\[
+    F_1 = 2\frac{\text{Precission} * \text{Recall}}{\text{Precission} + \text{Recall}} 
+\]
+
+donde \textit{Recall} es la métrica que nos da 
+
+\[
+    \frac{TP}{TP+FN}
+\]
+
+Usando $F_1$ como métrica lo que hacemos es tener un equilibrio entre Recall y
+Precission con lo que no favorecemos ningún comportamiento y entrenamos de una manera 
+más general.
 
 \section{Estimación de los hiperparámetros.}
 
@@ -330,10 +362,11 @@ Algoritmo    & $E_in$  & $E_{out}$ \\ \hline
 \subsection{Perceptron}
 
 \begin{itemize}
-    \item Coeficiente de regularización: $1000000.0$
-    \item Penalty: $l2$
+    \item Coeficiente alpha: $1.0$
+    \item max\_iter: $2000$
+    \item Shuffle: $True$
     \item Solver: \textit{lbfgs}
-    \item Tolerance: $0.001$
+    \item Tolerance: $0.0031622776601683794$
 \end{itemize}
 
 Los resultados que se han obtenido han sido los siguientes:
@@ -392,7 +425,7 @@ Random Forest   & 89.9642 & 70.9722 \\ \hline
 
 Procedemos a recuperar los resultados en una única tabla
 
-\begin{table}[h!]
+\begin{table}[H]
     \centering
     \begin{tabular}{|l|l|l|}
     \hline
@@ -404,6 +437,9 @@ Procedemos a recuperar los resultados en una única tabla
     \end{tabular}
     \caption{Resultados con los mejores parámetros}
 \end{table}
+
+\section{Elección del mejor modelo}
+
 
 \section{Conclusiones}
 
